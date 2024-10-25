@@ -80,7 +80,7 @@ const LandingPage = () => {
         if (captchaInput === captchaValue) {
 
             axios
-                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=KRD001`, cpData)
+                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${securityCode}`, cpData)
                 .then((res) => {
                     console.log('API Response:', res.data); // Log the entire response
 

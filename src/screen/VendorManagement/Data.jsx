@@ -1,47 +1,36 @@
 import { Box, Container, CssBaseline, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/styles';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { TextInput, ValidationForm } from 'react-bootstrap4-form-validation';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useDispatch, useSelector } from 'react-redux';
-import { VENDOR_MANAGEMENT } from '../../store/vendorManagement/vendorManagement.reducer';
-import { fetchProgramMapping } from '../../store/vendorManagement/vendorManagement.action';
 import Config from '../../config';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
 function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
+    const [dashboardFilterList, setDashboardFilterList] = useState([]);
 
-    const dispatch = useDispatch();
+    console.log('dashboardFilterList', dashboardFilterList)
 
-    let {dashboardFilterList} = useSelector((state) => {
-        return state[VENDOR_MANAGEMENT]
-    })
-
-    console.log('dashboardFilterList',dashboardFilterList)
-
-    // useEffect(() => {
-    //     dispatch(fetchProgramMapping())
-    // },[])
-
-    useEffect(()=>{
+    useEffect(() => {
         const headers = {
-            'Access-Control-Allow-Origin': true,
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
             'Content-Type': 'application/json',
             dbname: Cookies.get('DATABASE')
-            // dbname: localStorage.getItem('DATABASE')
         };
+
         axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetTblProgramMappings`, { headers })
             .then((res) => {
-                let data = res.data;
+                const data = res.data;
                 console.log('Data:', data);
+                setDashboardFilterList(data); // Assuming data is an array
             })
             .catch((error) => {
                 console.error('Error:', error.response ? error.response.data : error.message);
             });
-    },[])
+    }, []);
 
 
     return (
@@ -78,25 +67,22 @@ function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
                                     <Card.Body>
                                         <Row className="d-flex align-items-center">
                                             <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="natureofjob">Nature of job<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldProgram">Nature of job<span className="text-danger">*</span></Form.Label>
                                                 <Form.Group as={Col} md="9">
                                                     <select
-                                                        name="fldFKProgram"
-                                                        id="fldFKProgram"
+                                                        name="fldProgram"
+                                                        id="fldProgram"
                                                         className="form-control"
-                                                        value={userform?.fldFKProgram ? userform?.fldFKProgram : null}
+                                                        value={userform.fldProgram}
                                                         onChange={handleChange}
-                                                    // onChange={(e) => dispatch({ type: SET_PROGRAM_NAME_VENDOR_MANAGEMENT, payload: e.target.value })}
                                                     >
                                                         <option value="">Please select</option>
                                                         {dashboardFilterList.length > 0 &&
-                                                            dashboardFilterList.map((item) => {
-                                                                return (
-                                                                    <option value={item.fldId} key={item.fldId}>
-                                                                        {item.fldProgramName}
-                                                                    </option>
-                                                                );
-                                                            })}
+                                                            dashboardFilterList.map((item) => (
+                                                                <option value={item.fldProgramName} key={item.fldId}>
+                                                                    {item.fldProgramName}
+                                                                </option>
+                                                            ))}
                                                     </select>
                                                 </Form.Group>
                                             </Form.Group>

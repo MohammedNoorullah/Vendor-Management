@@ -8,17 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevStep, handleSubmit }) => {
 
     console.log(userform, 'userform')
-
-
-    // const handleSubmit = (data, formData) => {
-    //     // const databaseName = localStorage.getItem('DATABASE');
-    //     dispatch(createVendorManagement(
-    //         { ...formData, ...userform },
-    //         ""
-    //     ))
-
-    //     console.log('Final Data:', { ...userform, ...data });
-    // };
+    
     const handleFinalSubmit = (e) => {
         e.preventDefault();
         handleSubmit(userform);

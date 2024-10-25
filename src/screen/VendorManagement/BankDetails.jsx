@@ -5,7 +5,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AiOutlineUpload, AiOutlineEye } from 'react-icons/ai';
 import { IoEyeSharp } from "react-icons/io5";
 import { Box, Container, createTheme, CssBaseline, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { TextInput, ValidationForm } from 'react-bootstrap4-form-validation';
 import { ThemeProvider } from '@mui/styles';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
@@ -20,9 +19,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleErrorSu
     const [imagePreviews, setImagePreviews] = useState([]);
     const [uploadImages, setUploadImages] = useState();
 
-    let { buttonStatus } = useSelector((state) => {
-        return state.able;
-    });
+    
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
