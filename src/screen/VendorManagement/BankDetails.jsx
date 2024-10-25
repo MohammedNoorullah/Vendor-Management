@@ -19,7 +19,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleErrorSu
     const [imagePreviews, setImagePreviews] = useState([]);
     const [uploadImages, setUploadImages] = useState();
 
-    
+
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -191,15 +191,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleErrorSu
                                                     placeholder='GST Number'
                                                     required
                                                     autoComplete="off"
-                                                    pattern="^[A-Za-z0-9]{0,15}$"
+                                                    pattern="^[A-Za-z0-9]{15}$"  // Updated pattern to match exactly 15 characters
                                                     maxLength={15}
                                                     errorMessage={{
-                                                        pattern: 'Only alphanumeric are allowed, maximum 15 digit are allowed'
+                                                        pattern: 'Only alphanumeric characters are allowed, and exactly 15 characters are required.'
                                                     }}
                                                     value={userform?.fldGSTNo}
-                                                    onChange={handleChange}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+
+                                                        // Check if the length is exactly 15 characters
+                                                        if (value.length <= 15) {
+                                                            handleChange(e); // Call your original handleChange
+                                                        }
+                                                    }}
                                                 />
                                             </Form.Group>
+
                                             <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
 
                                                 <input
@@ -257,15 +265,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleErrorSu
                                                     placeholder='PAN Number'
                                                     required
                                                     autoComplete="off"
-                                                    pattern="^[A-Za-z0-9]{0,15}$"
+                                                    pattern="^[A-Za-z0-9]{15}$"  // Updated pattern for exactly 15 characters
                                                     maxLength={15}
                                                     errorMessage={{
-                                                        pattern: 'Only alphanumeric are allowed, maximum 15 digit are allowed'
+                                                        pattern: 'Only alphanumeric characters are allowed, and exactly 15 characters are required.'
                                                     }}
                                                     value={userform?.fldPANNo}
-                                                    onChange={handleChange}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+
+                                                        // Allow only if the length is exactly 15 characters
+                                                        if (value.length <= 15) {
+                                                            handleChange(e); // Call your original handleChange
+                                                        }
+                                                    }}
                                                 />
                                             </Form.Group>
+
                                             <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
 
                                                 <input
@@ -319,15 +335,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleErrorSu
                                                     placeholder='Aadhar Number'
                                                     required
                                                     autoComplete="off"
-                                                    pattern="^[0-9]{0,15}$"
-                                                    maxLength={15}
+                                                    pattern="^[0-9]{12}$"  // Updated pattern for exactly 12 digits
+                                                    maxLength={12}         // Set maxLength to 12
                                                     errorMessage={{
-                                                        pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
+                                                        pattern: 'Only numeric values are allowed, and exactly 12 digits are required.'
                                                     }}
                                                     value={userform?.fldAadharNumber}
-                                                    onChange={handleChange}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+
+                                                        // Allow only if the length is exactly 12 digits
+                                                        if (value.length <= 12 && /^[0-9]*$/.test(value)) {
+                                                            handleChange(e); // Call your original handleChange
+                                                        }
+                                                    }}
                                                 />
                                             </Form.Group>
+
                                             <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
 
                                                 <input
