@@ -1,17 +1,27 @@
 import { Box, Container, CssBaseline, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/styles';
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { TextInput, ValidationForm } from 'react-bootstrap4-form-validation';
+import { Button, Card, Col, Form, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { SelectGroup, TextInput, ValidationForm } from 'react-bootstrap4-form-validation';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Config from '../../config';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import makeAnimated from 'react-select/animated';
+import Select from 'react-select';
 
-function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
+
+let apiCallId;
+
+function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxChecked, userform, nextStep }) {
+    let [selectedList, setSelectedList] = useState('');
     const [dashboardFilterList, setDashboardFilterList] = useState([]);
+    const [paymentTerms, setPaymentTerms] = useState([]);
+    const [options, setOptions] = useState(null);
 
     console.log('dashboardFilterList', dashboardFilterList)
+    console.log('paymentTerms', paymentTerms);
+
 
     useEffect(() => {
         const headers = {
@@ -31,6 +41,41 @@ function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
                 console.error('Error:', error.response ? error.response.data : error.message);
             });
     }, []);
+
+    useEffect(() => {
+        const headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Content-Type': 'application/json',
+            dbname: Cookies.get('DATABASE')
+        };
+
+        axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetPropertyLists/86`, { headers })
+            .then((res) => {
+                const data = res.data;
+                console.log('Data:', data);
+                setPaymentTerms(data); // Assuming data is an array
+            })
+            .catch((error) => {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            });
+    }, []);
+
+    const propertyModal = (status) => {
+        // dispatch({ type: PROPERTY_MODAL_OPEN, id: componentId });
+        switch (status) {
+            case 'partyCategory':
+                setSelectedList('partyCategory');
+                apiCallId = 31;
+                break;
+            case 'programType':
+                setSelectedList('programType');
+                apiCallId = 23;
+                break;
+            default:
+                break;
+        }
+    };
 
 
     return (
@@ -87,16 +132,59 @@ function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
                                                 </Form.Group>
                                             </Form.Group>
 
+                                            {/* <Form.Group as={Col} md="4"> */}
+                                            {/* <div className="d-flex justify-content-between align-items-center"> */}
+                                            {/* <Form.Label htmlFor="fldProgram">
+                                                        Nature of job<span className="text-danger">*</span>
+                                                    </Form.Label> */}
+                                            {/* {!loading && buttonStatus === 'create' && ( */}
+                                            {/* <OverlayTrigger
+                                                            className="tooltip"
+                                                            delay={{ hide: 450, show: 300 }}
+                                                            overlay={(props) => <Tooltip {...props}>Add Program Type</Tooltip>}
+                                                            placement="bottom"
+                                                        >
+                                                            <i
+                                                                onClick={() => {
+                                                                    propertyModal('programType');
+                                                                }}
+                                                                style={{ color: 'purple', cursor: 'pointer' }}
+                                                                className="feather icon-plus-circle font-weight-bold"
+                                                            />
+                                                        </OverlayTrigger> */}
+                                            {/* )} */}
+                                            {/* </div> */}
+
+                                            {/* <Select */}
+                                            {/* name="fldProgram"
+                                                    id="fldProgram" */}
+                                            {/* // isDisabled={buttonStatus === 'delete' || (buttonStatus === 'update' && true)}
+                                                    // isDisabled={buttonStatus === 'delete'} */}
+                                            {/* closeMenuOnSelect={false}
+                                                    components={makeAnimated}
+                                                    value={
+                                                             userform?.fldProgram &&
+                                                            userform?.fldProgram.length > 0 &&
+                                                            options[options.map((i) => i.value).indexOf(userform?.fldProgram)]
+                                                    } */}
+                                            {/* // required={buttonStatus === 'Delete' && false}
+                                                    // onClick={() => buttonStatus === 'update' && dispatch(fetchColorDetailsWithoutId())}
+                                                    // onChange={(e) => handleChange(e, 'fldProgram')}
+                                                    // isMulti
+                                                    // options={options} */}
+                                            {/* // /> */}
+                                            {/* // </Form.Group> */}
+
                                             <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="ReferenceinKR">Reference in KR<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldReference">Reference<span className="text-danger">*</span></Form.Label>
                                                 <TextInput
-                                                    name="ReferenceinKR"
-                                                    id="ReferenceinKR"
-                                                    placeholder="Reference in KR"
+                                                    name="fldReference"
+                                                    id="fldReference"
+                                                    placeholder="Reference"
                                                     required
                                                     autoComplete="off"
                                                     maxLength={50}
-                                                    value={userform?.ReferenceinKR}
+                                                    value={userform?.fldReference}
                                                     onChange={handleChange}
                                                 />
                                             </Form.Group>
@@ -306,12 +394,26 @@ function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="fldEMail">E-Mail<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldContactNameDepartment">Contact Name Department<span className="text-danger">*</span></Form.Label>
+                                                <TextInput
+                                                    name="fldContactNameDepartment"
+                                                    id="fldContactNameDepartment"
+                                                    placeholder="Contact Name Department"
+                                                    required
+                                                    autoComplete="off"
+                                                    maxLength={50}
+                                                    value={userform?.fldContactNameDepartment}
+                                                    onChange={handleChange}
+                                                />
+                                            </Form.Group>
+
+                                            <Form.Group as={Col} md="6">
+                                                <Form.Label htmlFor="fldEMail">E-Mail</Form.Label>
                                                 <TextInput
                                                     name="fldEMail"
                                                     id="fldEMail"
                                                     placeholder="E-Mail"
-                                                    required
+                                                    // required
                                                     autoComplete="off"
                                                     maxLength={50}
                                                     type="email"
@@ -319,6 +421,32 @@ function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
                                                     value={userform?.fldEMail}
                                                     onChange={handleChange}
                                                 />
+                                            </Form.Group>
+
+                                            <Form.Group as={Col} md="6">
+                                                <Form.Label htmlFor="fldContactEMailId" className="d-flex align-items-center">
+                                                    E-Mail <span className="text-danger">*</span> (for account purpose)
+                                                    <Form.Check
+                                                        type="checkbox"
+                                                        label="Same as E-Mail"
+                                                        checked={checkboxChecked}
+                                                        onChange={handleCheckboxChange}
+                                                        className="ms-2" // Adds margin to the left for spacing
+                                                    />
+                                                </Form.Label>
+                                                <TextInput
+                                                    name="fldContactEMailId"
+                                                    id="fldContactEMailId"
+                                                    placeholder="E-Mail"
+                                                    // required
+                                                    autoComplete="off"
+                                                    maxLength={50}
+                                                    type="email"
+                                                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                                    value={userform?.fldContactEMailId}
+                                                    onChange={handleChange}
+                                                />
+
                                             </Form.Group>
 
 
@@ -330,15 +458,69 @@ function Data({ handleErrorSubmit, handleChange, userform, nextStep }) {
                                                     placeholder="Contact Number"
                                                     required
                                                     autoComplete="off"
-                                                    pattern="^[0-9]{0,15}$"
-                                                    maxLength={15}
+                                                    pattern="^[0-9]{10}$"  // Updated pattern for exactly 10 digits
+                                                    maxLength={10}         // Set maxLength to 10
                                                     errorMessage={{
-                                                        pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
+                                                        pattern: 'Only numeric values are allowed, and exactly 10 digits are required.'
                                                     }}
                                                     value={userform?.fldContactNo}
-                                                    onChange={handleChange}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+
+                                                        // Allow only if the length is exactly 10 digits and numeric
+                                                        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
+                                                            handleChange(e); // Call your original handleChange
+                                                        }
+                                                    }}
                                                 />
                                             </Form.Group>
+
+                                            <Form.Group as={Col} md="6">
+                                                <Form.Label htmlFor="fldAdditionalContactNumber">Additional Contact Number<span className="text-danger">*</span></Form.Label>
+                                                <TextInput
+                                                    name="fldAdditionalContactNumber"
+                                                    id="fldAdditionalContactNumber"
+                                                    placeholder="Additional Contact Number"
+                                                    autoComplete="off"
+                                                    pattern="^[0-9]{10}$"  // Updated pattern for exactly 10 digits
+                                                    maxLength={10}         // Set maxLength to 10
+                                                    errorMessage={{
+                                                        pattern: 'Only numeric values are allowed, and exactly 10 digits are required.'
+                                                    }}
+                                                    value={userform?.fldAdditionalContactNumber}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+
+                                                        // Allow only if the length is exactly 10 digits and numeric
+                                                        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
+                                                            handleChange(e); // Call your original handleChange
+                                                        }
+                                                    }}
+                                                />
+                                            </Form.Group>
+
+                                            <Form.Group as={Col} md="6">
+                                                <Form.Label htmlFor="fldFKPaymentTerms">Payment Terms</Form.Label>
+                                                <SelectGroup
+                                                    name="fldFKPaymentTerms"
+                                                    id="fldFKPaymentTerms"
+                                                    value={userform?.fldFKPaymentTerms}
+                                                    // required={!userform?.fldFKPaymentTerms && true}
+                                                    errorMessage="Please select Payment Terms"
+                                                    onChange={handleChange}
+                                                >
+                                                    <option value="">--- Please select ---</option>
+                                                    {paymentTerms?.length > 0 &&
+                                                        paymentTerms?.map((item) => {
+                                                            return (
+                                                                <option key={item?.fldId} value={item?.fldId}>
+                                                                    {item?.fldDescription}
+                                                                </option>
+                                                            );
+                                                        })}
+                                                </SelectGroup>
+                                            </Form.Group>
+
 
                                             <Form.Group as={Col} md="6">
                                                 <Form.Label htmlFor="fldDesignation">Designation<span className="text-danger">*</span></Form.Label>

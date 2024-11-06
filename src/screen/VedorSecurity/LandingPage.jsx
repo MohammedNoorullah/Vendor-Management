@@ -12,12 +12,12 @@ import { unstable_HistoryRouter, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const LandingPage = () => {
+const LandingPage = ({securityCode,handleChange}) => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false)
     const [database, setDatabase] = useState(null);
-    const [securityCode, setSecurityCode] = useState('');
+    // const [securityCode, setSecurityCode] = useState('');
     // const [captchaValue, setCaptchaValue] = useState(null);
     // const recaptchaRef = React.createRef();
     const [captchaInput, setCaptchaInput] = useState('');
@@ -33,9 +33,9 @@ const LandingPage = () => {
         return result;
     }
 
-    const handleChange = (e) => {
-        setSecurityCode(e.target.value);
-    };
+    // const handleChange = (e) => {
+    //     setSecurityCode(e.target.value);
+    // };
 
     const handleCaptchaChange = (e) => {
         setCaptchaInput(e.target.value);
@@ -258,6 +258,19 @@ const LandingPage = () => {
                                 )}
                             </Button>
                         </Grid2>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginBottom: 2 }}>
+                            <Typography variant="body1">
+                                <a href="path/to/MSME_Declaration_Form.pdf" target="_blank" rel="noopener noreferrer">
+                                    Download MSME Declaration Form
+                                </a>
+                            </Typography>
+                            <Typography variant="body1">
+                                <a href="path/to/TDS_TCS_Declaration_Form.pdf" target="_blank" rel="noopener noreferrer">
+                                    Download TDS / TCS Declaration Form
+                                </a>
+                            </Typography>
+                        </Box>
 
                     </Box>
                 </Box>
