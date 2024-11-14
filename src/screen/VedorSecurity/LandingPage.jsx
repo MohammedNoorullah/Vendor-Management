@@ -12,7 +12,7 @@ import { unstable_HistoryRouter, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const LandingPage = ({securityCode,handleChange}) => {
+const LandingPage = ({ securityCode, handleChange }) => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false)
@@ -239,7 +239,18 @@ const LandingPage = ({securityCode,handleChange}) => {
                                 minWidth: '40%'
                             }}
                         />
-                        <div style={{ fontSize: '24px', margin: '10px 0', fontWeight: 'bold' }}>{captchaValue}</div>
+                        <div
+                            style={{
+                                fontSize: '24px',
+                                margin: '10px 0',
+                                fontWeight: 'bold',
+                                border: '1px solid #000', // Border style: 2px solid black
+                                padding: '10px',           // Optional: Add padding for spacing inside the border
+                                borderRadius: '4px',       // Optional: Add rounded corners
+                            }}
+                        >
+                            Captcha : {captchaValue}
+                        </div>
                         {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
 
                         <Grid2 sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -258,19 +269,44 @@ const LandingPage = ({securityCode,handleChange}) => {
                                 )}
                             </Button>
                         </Grid2>
+                        <div>
+                            {/* Box containing the Note with reduced width */}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    gap: 2,
+                                    marginBottom: 2,
+                                    width: '80%',        // Reduce the width to 80% (adjust as needed)
+                                    maxWidth: '600px',   // Optional: limit the maximum width to 600px
+                                    marginLeft: 'auto',  // Centers the box horizontally
+                                    marginRight: 'auto', // Centers the box horizontally
+                                }}
+                            >
+                                <Typography variant="body1">
+                                    <span style={{ color: 'red' }}>Note:</span> Before proceeding for entering vendor information,
+                                    first download the below documents, fill it, seal, sign and scan for uploading.
+                                </Typography>
+                            </Box>
+                        </div>
+
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginBottom: 2 }}>
                             <Typography variant="body1">
-                                <a href="path/to/MSME_Declaration_Form.pdf" target="_blank" rel="noopener noreferrer">
+                                <a href="/MSME_Declaration_Form.doc" download="MSME_Declaration_Form.doc">
                                     Download MSME Declaration Form
                                 </a>
                             </Typography>
                             <Typography variant="body1">
-                                <a href="path/to/TDS_TCS_Declaration_Form.pdf" target="_blank" rel="noopener noreferrer">
+                                {/* Change the file path to your .doc file */}
+                                <a href="/TDS_TCS_Declaration_Form.doc" download="TDS_TCS_Declaration_Form.doc">
                                     Download TDS / TCS Declaration Form
                                 </a>
                             </Typography>
                         </Box>
+
+
+
 
                     </Box>
                 </Box>

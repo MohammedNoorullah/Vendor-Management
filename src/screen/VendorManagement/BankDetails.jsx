@@ -14,19 +14,24 @@ import Cookies from 'js-cookie';
 
 const theme = createTheme();
 
-const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFileChange, handleFileChange, error, handleErrorSubmit }) => {
+const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload, triggerFileInput, handleFileChange, error, setError, handleErrorSubmit }) => {
 
     console.log(userform, 'userform')
 
     const fileInputRef = useRef(null);
     const [imagePreviews, setImagePreviews] = useState([]);
     const [uploadImages, setUploadImages] = useState();
+    // const [error, setError] = useState('');
     const [accTypeList, setAccTypeList] = useState([]);
 
 
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [selectedOption, setSelectedOption] = useState('');
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(null);
 
 
     useEffect(() => {
@@ -52,6 +57,17 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
         setSelectedOption(event.target.value);
     };
 
+    // const handleFileChange = (event) => {
+    //     const file = event.target.files[0];
+    //     // Check if file is a PDF or DOC/DOCX file
+    //     if (file && (file.type === 'application/pdf' || file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+    //         setSelectedFile(file);
+    //     } else {
+    //         alert('Please select a valid .pdf or .doc/.docx file');
+    //         setSelectedFile(null);
+    //     }
+    // };
+
 
     // const handleFileChange = (e) => {
     //     const selectedFile = e.target.files[0];
@@ -75,6 +91,10 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
         nextStep();
 
     };
+
+
+
+
 
     return (
         <ValidationForm onSubmit={handleFinalSubmit} onErrorSubmit={handleErrorSubmit}>
@@ -247,46 +267,36 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
                                                 )} */}
                                             </Form.Group>
 
-                                            <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
+                                            <Form.Group as={Col} md="4">
+                                                {/* GST File Input */}
                                                 <input
                                                     type="file"
-                                                    name='fldGSTFileName'
-                                                    accept="image/*"
-                                                    id='fldGSTFileName'
-                                                    style={{ display: 'none' }} // Hide the default file input
+                                                    accept="image/png, image/jpeg"
+                                                    id="fldGSTFileName"
+                                                    style={{ display: 'none' }}
                                                     onChange={(e) => handleFileChange(e, 'fldGSTFileName')}
                                                 />
-                                                <div style={{ marginTop: '10px' }}>
-                                                    <Button variant="primary" onClick={() => document.getElementById('fldGSTFileName').click()}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#338333'
-                                                        }}>
-                                                        <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px', marginRight: '10px' }}>/</span>
-                                                    <Button
-                                                        variant="secondary"
-                                                        onClick={() => handlePreview('fldGSTFileName')}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#0dc2ff'
-                                                        }}
-                                                    >
-                                                        <IoEyeSharp style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    {userform.fldGSTFileName ? (
-                                                        <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px' }}>ATTACHED</span>
-                                                    ) : null}
-                                                    {error && <div style={{ color: 'red' }}>{error}</div>}
-                                                </div>
+                                                {/* <Button
+                                                    variant="primary"
+                                                    onClick={() => triggerFileInput('fldGSTFileName')}
+                                                >
+                                                    Upload GST File
+                                                </Button> */}
+
+                                                <Button variant="primary"
+                                                    onClick={() => triggerFileInput('fldGSTFileName')}
+                                                    style={{
+                                                        marginRight: '10px',
+                                                        backgroundColor: 'transparent',
+                                                        border: 'none',
+                                                        padding: '0',
+                                                        color: '#338333'
+                                                    }}>
+                                                    <AiOutlineUpload style={{ fontSize: '25px' }} />
+                                                </Button>
+                                                {userform.fldGSTFileName && <span>{userform.fldGSTFileName}</span>}
                                             </Form.Group>
+
 
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -299,17 +309,17 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
                                                     placeholder='PAN Number'
                                                     required
                                                     autoComplete="off"
-                                                    pattern="^[A-Za-z0-9]{15}$" // Change pattern to exactly 15 characters
-                                                    maxLength={15}
+                                                    pattern="^[A-Za-z0-9]{10}$" // Change pattern to exactly 15 characters
+                                                    maxLength={10}
                                                     errorMessage={{
-                                                        pattern: 'Only alphanumeric are allowed, and exactly 15 characters are required.',
+                                                        pattern: 'Only alphanumeric are allowed, and exactly 10 characters are required.',
                                                         required: 'PAN Number is required.'
                                                     }}
                                                     value={userform?.fldPANNo}
                                                     onChange={(e) => {
                                                         const { value } = e.target;
                                                         // Validate length
-                                                        if (value.length <= 15) {
+                                                        if (value.length <= 10) {
                                                             handleChange(e); // Call your existing handleChange function
                                                         }
                                                     }}
@@ -321,45 +331,34 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
                                                 )} */}
                                             </Form.Group>
 
-                                            <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
+                                            <Form.Group as={Col} md="4">
+                                                {/* PAN File Input */}
                                                 <input
                                                     type="file"
-                                                    name='fldPANFileName'
-                                                    accept="image/*"
-                                                    id='fldPANFileName'
-                                                    style={{ display: 'none' }} // Hide the default file input
+                                                    accept="image/png, image/jpeg"
+                                                    id="fldPANFileName"
+                                                    style={{ display: 'none' }}
                                                     onChange={(e) => handleFileChange(e, 'fldPANFileName')}
                                                 />
-                                                <div style={{ marginTop: '10px' }}>
-                                                    <Button variant="primary" onClick={() => document.getElementById('fldPANFileName').click()}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#338333'
-                                                        }}>
-                                                        <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px', marginRight: '10px' }}>/</span>
-                                                    <Button
-                                                        variant="secondary"
-                                                        onClick={() => handlePreview('fldPANFileName')}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#0dc2ff'
-                                                        }}
-                                                    >
-                                                        <IoEyeSharp style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    {userform.fldPANFileName ? (
-                                                        <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px' }}>ATTACHED</span>
-                                                    ) : null}
-                                                    {error && <div style={{ color: 'red' }}>{error}</div>}
-                                                </div>
+                                                {/* <Button
+                                                    variant="primary"
+                                                    onClick={() => triggerFileInput('fldPANFileName')}
+                                                >
+                                                    Upload PAN File
+                                                </Button> */}
+
+                                                <Button variant="primary"
+                                                    onClick={() => triggerFileInput('fldPANFileName')}
+                                                    style={{
+                                                        marginRight: '10px',
+                                                        backgroundColor: 'transparent',
+                                                        border: 'none',
+                                                        padding: '0',
+                                                        color: '#338333'
+                                                    }}>
+                                                    <AiOutlineUpload style={{ fontSize: '25px' }} />
+                                                </Button>
+                                                {userform.fldPANFileName && <span>{userform.fldPANFileName}</span>}
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -389,45 +388,34 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
                                                 />
                                             </Form.Group>
 
-                                            <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
+                                            <Form.Group as={Col} md="4">
+                                                {/* Aadhaar File Input */}
                                                 <input
                                                     type="file"
-                                                    name='fldAadhaarFileName'
                                                     accept="image/*"
-                                                    id='fldAadhaarFileName'
-                                                    style={{ display: 'none' }} // Hide the default file input
+                                                    id="fldAadhaarFileName"
+                                                    style={{ display: 'none' }}
                                                     onChange={(e) => handleFileChange(e, 'fldAadhaarFileName')}
                                                 />
-                                                <div style={{ marginTop: '10px' }}>
-                                                    <Button variant="primary" onClick={() => document.getElementById('fldAadhaarFileName').click()}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#338333'
-                                                        }}>
-                                                        <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px', marginRight: '10px' }}>/</span>
-                                                    <Button
-                                                        variant="secondary"
-                                                        onClick={() => handlePreview('fldAadhaarFileName')}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#0dc2ff'
-                                                        }}
-                                                    >
-                                                        <IoEyeSharp style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    {userform.fldAadhaarFileName ? (
-                                                        <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px' }}>ATTACHED</span>
-                                                    ) : null}
-                                                    {error && <div style={{ color: 'red' }}>{error}</div>}
-                                                </div>
+                                                {/* <Button
+                                                    variant="primary"
+                                                    onClick={() => triggerFileInput('fldAadhaarFileName')}
+                                                >
+                                                    Upload Aadhaar File
+                                                </Button> */}
+
+                                                <Button variant="primary"
+                                                    onClick={() => triggerFileInput('fldAadhaarFileName')}
+                                                    style={{
+                                                        marginRight: '10px',
+                                                        backgroundColor: 'transparent',
+                                                        border: 'none',
+                                                        padding: '0',
+                                                        color: '#338333'
+                                                    }}>
+                                                    <AiOutlineUpload style={{ fontSize: '25px' }} />
+                                                </Button>
+                                                {userform.fldAadhaarFileName && <span>{userform.fldAadhaarFileName}</span>}
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -456,49 +444,76 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleGSTFile
                                             </Form.Group>
 
                                             {selectedOption === 'yes' ? (
-                                                <Form.Group as={Col} md="4" style={{ marginLeft: '50px' }}>
+                                                <Form.Group as={Col} md="4">
+                                                    {/* Passbook File Input */}
                                                     <input
                                                         type="file"
-                                                        name='fldPassbookFileName'
                                                         accept="image/*"
-                                                        id='fldPassbookFileName'
-                                                        style={{ display: 'none' }} // Hide the default file input
+                                                        id="fldPassbookFileName"
+                                                        style={{ display: 'none' }}
                                                         onChange={(e) => handleFileChange(e, 'fldPassbookFileName')}
                                                     />
-                                                    <div style={{ marginTop: '10px' }}>
-                                                        <Button variant="primary" onClick={() => document.getElementById('fldPassbookFileName').click()}
-                                                            style={{
-                                                                marginRight: '10px',
-                                                                backgroundColor: 'transparent',
-                                                                border: 'none',
-                                                                padding: '0',
-                                                                color: '#338333'
-                                                            }}>
-                                                            <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                        </Button>
-                                                        <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px', marginRight: '10px' }}>/</span>
-                                                        <Button
-                                                            variant="secondary"
-                                                            onClick={() => handlePreview('fldPassbookFileName')}
-                                                            style={{
-                                                                marginRight: '10px',
-                                                                backgroundColor: 'transparent',
-                                                                border: 'none',
-                                                                padding: '0',
-                                                                color: '#0dc2ff'
-                                                            }}
-                                                        >
-                                                            <IoEyeSharp style={{ fontSize: '25px' }} />
-                                                        </Button>
-                                                        {userform.fldPassbookFileName ? (
-                                                            <span style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px' }}>ATTACHED</span>
-                                                        ) : null}
-                                                        {error && <div style={{ color: 'red' }}>{error}</div>}
-                                                    </div>
+                                                    {/* <Button
+                                                        variant="primary"
+                                                        onClick={() => triggerFileInput('fldPassbookFileName')}
+                                                    >
+                                                        Upload Passbook File
+                                                    </Button> */}
+
+                                                    <Button variant="primary"
+                                                        onClick={() => triggerFileInput('fldPassbookFileName')}
+                                                        style={{
+                                                            marginRight: '10px',
+                                                            backgroundColor: 'transparent',
+                                                            border: 'none',
+                                                            padding: '0',
+                                                            color: '#338333'
+                                                        }}>
+                                                        <AiOutlineUpload style={{ fontSize: '25px' }} />
+                                                    </Button>
+                                                    {userform.fldPassbookFileName && <span>{userform.fldPassbookFileName}</span>}
                                                 </Form.Group>
                                             ) : ('')}
 
+                                            <Form.Group as={Col} md="4">
+                                                <Button
+                                                    variant="success"
+                                                    onClick={handleUpload}
+                                                    className="ml-auto btn-sm"
+                                                    style={{ display: 'block', marginTop: '10px' }}
+                                                >
+                                                    Upload All Files
+                                                </Button>
+                                            </Form.Group>
 
+
+
+                                        </Row>
+
+                                        <Row className="d-flex align-items-center">
+                                            <Form.Group as={Col} md="4" controlId="fldDeclarationOfMSME">
+                                                <Form.Label>
+                                                    Declaration Of MSME<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <div>
+                                                    <input
+                                                        type="file"
+                                                        accept=".pdf,.doc,.docx"
+                                                        onChange={handleFileChange}
+                                                    />
+                                                    {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+                                                    <button
+                                                        // onClick={handleFileUpload}
+                                                        disabled={isUploading || !selectedFile}
+                                                    >
+                                                        {isUploading ? 'Uploading...' : 'Upload File'}
+                                                    </button>
+
+                                                    {uploadSuccess !== null && (
+                                                        <p>{uploadSuccess ? 'File uploaded successfully!' : 'Failed to upload file.'}</p>
+                                                    )}
+                                                </div>
+                                            </Form.Group>
                                         </Row>
                                     </Card.Body>
                                 </Card>
