@@ -9,16 +9,29 @@ import { useState } from 'react';
 
 function App() {
   const [securityCode, setSecurityCode] = useState('');
+  const [vendorCode, setVendorCode] = useState('');
+  const [isVendorCode, setIsVendorCode] = useState(true);
 
-  const handleChange = (e) => {
-    setSecurityCode(e.target.value);
-};
+  const handleChange = (event) => {
+    const { value } = event.target;
+
+    if (isVendorCode) {
+      setVendorCode(value);
+    } else {
+      setSecurityCode(value);
+    }
+  };
+
+  const handleToggle = () => {
+    setIsVendorCode((prev) => !prev); // Toggle between vendor and security code input
+  };
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/vendor/security" />} />
-        <Route path="/vendor/security" element={<LandingPage securityCode={securityCode} handleChange={handleChange} />} />
-        <Route path="/vendorManagement" element={<VendorManagement securityCode={securityCode} />} />
+        <Route path="/vendor/security" element={<LandingPage securityCode={securityCode} vendorCode={vendorCode} isVendorCode={isVendorCode} handleChange={handleChange} handleToggle={handleToggle} />} />
+        <Route path="/vendorManagement" element={<VendorManagement securityCode={securityCode} vendorCode={vendorCode} />} />
       </Routes>
     </Router>
     // <>

@@ -13,7 +13,7 @@ import Select from 'react-select';
 
 let apiCallId;
 
-function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxChecked, userform, nextStep }) {
+function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, checkboxChecked, userform, nextStep }) {
     let [selectedList, setSelectedList] = useState('');
     const [dashboardFilterList, setDashboardFilterList] = useState([]);
     const [paymentTerms, setPaymentTerms] = useState([]);
@@ -60,6 +60,8 @@ function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxC
                 console.error('Error:', error.response ? error.response.data : error.message);
             });
     }, []);
+
+    
 
     const propertyModal = (status) => {
         // dispatch({ type: PROPERTY_MODAL_OPEN, id: componentId });
@@ -305,7 +307,7 @@ function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxC
                                             </Form.Group> */}
 
                                             <Form.Group as={Col} md="12">
-                                                <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*If you dont't find your required information directly enter below*</span></Form.Label>
+                                                <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*If you don't find your required information directly enter below*</span></Form.Label>
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="3">
@@ -394,7 +396,7 @@ function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxC
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="fldContactNameDepartment">Contact Name Department<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldContactNameDepartment">Department<span className="text-danger">*</span></Form.Label>
                                                 <TextInput
                                                     name="fldContactNameDepartment"
                                                     id="fldContactNameDepartment"
@@ -451,7 +453,7 @@ function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxC
 
 
                                             <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="fldContactNo">Contact Number<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldContactNo">Contact Number 1<span className="text-danger">*</span></Form.Label>
                                                 <TextInput
                                                     name="fldContactNo"
                                                     id="fldContactNo"
@@ -476,7 +478,7 @@ function Data({ handleErrorSubmit, handleChange, handleCheckboxChange, checkboxC
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="fldAdditionalContactNumber">Additional Contact Number<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldAdditionalContactNumber">Contact Number 2<span className="text-danger">*</span></Form.Label>
                                                 <TextInput
                                                     name="fldAdditionalContactNumber"
                                                     id="fldAdditionalContactNumber"

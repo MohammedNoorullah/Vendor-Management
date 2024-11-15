@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { Avatar, Box, Button, Container, createTheme, CssBaseline, Grid, Grid2, TextField, Typography } from '@mui/material';
@@ -12,7 +12,7 @@ import { unstable_HistoryRouter, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const LandingPage = ({ securityCode, handleChange }) => {
+const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, handleToggle }) => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false)
@@ -73,14 +73,72 @@ const LandingPage = ({ securityCode, handleChange }) => {
 
         const formData = new FormData(e.currentTarget);
 
+        const headers = {
+            'Access-Control-Allow-Origin': true,
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Content-Type': 'application/json',
+            dbname: Cookies.get('DATABASE'),
+        };
+
         let cpData = {
             securityCode: formData.get('securityCode'),
             captcha: formData.get('captcha')
         };
-        if (captchaInput === captchaValue) {
+        if (captchaInput === captchaValue && securityCode) {
 
             axios
                 .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${securityCode}`, cpData)
+                .then((res) => {
+                    console.log('API Response:', res.data); // Log the entire response
+
+                    // Ensure that the response is an array
+                    if (Array.isArray(res.data) && res.data.length > 0) {
+                        console.log('Data structure confirmed:', res.data); // Confirm data structure
+
+                        const firstItem = res.data[0]; // Get the first item in the array
+
+                        if (firstItem.fldDatabase) {
+                            // fldDatabase is present
+                            console.log('Database Name:', firstItem.fldDatabase);
+                            localStorage.setItem('DATABASE', firstItem.fldDatabase); // Store in local storage
+                            Cookies.set('DATABASE', firstItem.fldDatabase); // Set cookie
+                            Cookies.set('SECURITYCODE', firstItem.securityCode); // Set security code cookie
+                            Cookies.set('CAPTCHA', firstItem.captcha); // Set CAPTCHA cookie
+                            Cookies.set('URL', Config.baseUrl); // Set URL cookie
+
+                            // Update state with the database name if needed
+                            setDatabase(firstItem.fldDatabase); // Assuming setDatabase is a state setter function
+                        } else {
+                            console.error('fldDatabase is missing in the first item of the response');
+                        }
+                    } else {
+                        console.error('Unexpected response format or empty array:', res.data);
+                    }
+
+                    // Navigate after processing response
+                    // window.alert('calling....')
+
+                    // history.push({
+                    //     pathname: '/vendorManagement',
+                    //     state: { companies: res.data } // Pass the entire response
+                    // });
+
+                    navigate('/vendorManagement');
+
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.error('Error response:', err?.response?.data); // Log error
+                    toast.error(err?.response?.data);
+                    setLoading(false);
+                    if (err?.response?.data?.status === 401) {
+                        toast.error('Invalid Credentials');
+                    }
+                });
+        }
+        else {
+            axios
+                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${vendorCode}`, cpData)
                 .then((res) => {
                     console.log('API Response:', res.data); // Log the entire response
 
@@ -134,13 +192,6 @@ const LandingPage = ({ securityCode, handleChange }) => {
 
 
 
-
-
-    // const onCaptchaChange = (value) => {
-    //     setCaptchaValue(value);
-    // };
-
-
     const handleErrorSubmit = (e, formData, userform, errorInputs) => {
         if (errorInputs.length !== 0) {
             toast.error('Validation Error: Unable to Proceed!', { autoClose: 1500 });
@@ -178,6 +229,18 @@ const LandingPage = ({ securityCode, handleChange }) => {
                     <Typography component="h1" variant="h5">
                         Vendor Management Security
                     </Typography>
+                    <Button
+                        onClick={handleToggle}
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            marginTop: 2,
+                            fontSize: '0.875rem',  // Reduce font size
+                            padding: '6px 12px',  // Reduce padding to make the button smaller
+                        }}
+                    >
+                        Switch to {isVendorCode ? 'Security Code' : 'Vendor Code'}
+                    </Button>
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -199,13 +262,12 @@ const LandingPage = ({ securityCode, handleChange }) => {
                             margin="normal"
                             required
                             fullWidth
-                            id="securitycode"
-                            label="Security Code"
-                            name="securitycode"
-                            value={securityCode}
+                            id={isVendorCode ? "vendorCode" : "securityCode"}
+                            label={isVendorCode ? "Vendor Code" : "Security Code"}
+                            name={isVendorCode ? "vendorCode" : "securityCode"}
+                            value={isVendorCode ? vendorCode : securityCode}
                             onChange={handleChange}
                             autoComplete="off"
-                            autoFocus
                             sx={{
                                 backgroundColor: '#fff',
                                 borderRadius: 10,
@@ -215,6 +277,10 @@ const LandingPage = ({ securityCode, handleChange }) => {
                                 minWidth: '40%'
                             }}
                         />
+
+
+
+
 
                         <TextField
                             inputProps={{
@@ -239,6 +305,7 @@ const LandingPage = ({ securityCode, handleChange }) => {
                                 minWidth: '40%'
                             }}
                         />
+
                         <div
                             style={{
                                 fontSize: '24px',

@@ -14,7 +14,7 @@ import Cookies from 'js-cookie';
 
 const theme = createTheme();
 
-const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload, triggerFileInput, handleFileChange, error, setError, handleErrorSubmit }) => {
+const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload, triggerFileInput, handleFileChange, fileInputRefs, error, setError, handleErrorSubmit }) => {
 
     console.log(userform, 'userform')
 
@@ -153,6 +153,64 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
+                                            <Form.Group as={Col} md="6" controlId="fldAccountContactPerson">
+                                                <Form.Label>
+                                                    Account Contact Person<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <TextInput
+                                                    name="fldAccountContactPerson"
+                                                    placeholder='Contact Person'
+                                                    required
+                                                    autoComplete="off"
+                                                    maxLength={50}
+                                                    value={userform?.fldAccountContactPerson}
+                                                    onChange={handleChange}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group as={Col} md="6" controlId="fldAccountContactNo">
+                                                <Form.Label>
+                                                    Account Contact Number<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <TextInput
+                                                    name="fldAccountContactNo"
+                                                    placeholder='Contact Number'
+                                                    required
+                                                    autoComplete="off"
+                                                    maxLength={50}
+                                                    value={userform?.fldAccountContactNo}
+                                                    onChange={handleChange}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group as={Col} md="6" controlId="fldAccountMailId">
+                                                <Form.Label>
+                                                    Account Holder E-Mail<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <TextInput
+                                                    name="fldAccountMailId"
+                                                    placeholder='Account Holder Name'
+                                                    required
+                                                    autoComplete="off"
+                                                    maxLength={50}
+                                                    value={userform?.fldAccountMailId}
+                                                    onChange={handleChange}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group as={Col} md="6" controlId="fldBranchName">
+                                                <Form.Label>
+                                                    Branch Name<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <TextInput
+                                                    name="fldBranchName"
+                                                    placeholder='Branch Name'
+                                                    required
+                                                    autoComplete="off"
+                                                    maxLength={50}
+                                                    value={userform?.fldBranchName}
+                                                    onChange={handleChange}
+                                                />
+                                            </Form.Group>
+                                        </Row>
+                                        <Row className="d-flex align-items-center">
                                             <Form.Group as={Col} md="6" controlId="fldAccountNo">
                                                 <Form.Label>
                                                     Account Number<span className="text-danger">*</span>
@@ -191,20 +249,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
-                                            <Form.Group as={Col} md="6" controlId="fldBranchName">
-                                                <Form.Label>
-                                                    Branch Name<span className="text-danger">*</span>
-                                                </Form.Label>
-                                                <TextInput
-                                                    name="fldBranchName"
-                                                    placeholder='Branch Name'
-                                                    required
-                                                    autoComplete="off"
-                                                    maxLength={50}
-                                                    value={userform?.fldBranchName}
-                                                    onChange={handleChange}
-                                                />
-                                            </Form.Group>
+
                                             <Form.Group as={Col} md="6" controlId="fldIFSCCode">
                                                 <Form.Label>
                                                     IFSC Code<span className="text-danger">*</span>
@@ -269,32 +314,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
 
                                             <Form.Group as={Col} md="4">
                                                 {/* GST File Input */}
+                                                <label>GST File</label>
                                                 <input
+                                                    ref={fileInputRefs.fldGSTFileName}
                                                     type="file"
-                                                    accept="image/png, image/jpeg"
-                                                    id="fldGSTFileName"
-                                                    style={{ display: 'none' }}
-                                                    onChange={(e) => handleFileChange(e, 'fldGSTFileName')}
+                                                    accept="image/*"
+                                                    onChange={() => handleFileChange('fldGSTFileName')}
                                                 />
-                                                {/* <Button
-                                                    variant="primary"
-                                                    onClick={() => triggerFileInput('fldGSTFileName')}
-                                                >
-                                                    Upload GST File
-                                                </Button> */}
-
-                                                <Button variant="primary"
-                                                    onClick={() => triggerFileInput('fldGSTFileName')}
-                                                    style={{
-                                                        marginRight: '10px',
-                                                        backgroundColor: 'transparent',
-                                                        border: 'none',
-                                                        padding: '0',
-                                                        color: '#338333'
-                                                    }}>
-                                                    <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                </Button>
-                                                {userform.fldGSTFileName && <span>{userform.fldGSTFileName}</span>}
+                                                {imagePreviews.fldGSTFileName && (
+                                                    <div>
+                                                        <img
+                                                            src={imagePreviews.fldGSTFileName.previewUrl}
+                                                            alt="GST Preview"
+                                                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                                        />
+                                                        <p>{imagePreviews.fldGSTFileName.file.name}</p>
+                                                    </div>
+                                                )}
                                             </Form.Group>
 
 
@@ -332,33 +368,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="4">
-                                                {/* PAN File Input */}
+                                                <label>PAN File</label>
                                                 <input
+                                                    ref={fileInputRefs.fldPANFileName}
                                                     type="file"
-                                                    accept="image/png, image/jpeg"
-                                                    id="fldPANFileName"
-                                                    style={{ display: 'none' }}
-                                                    onChange={(e) => handleFileChange(e, 'fldPANFileName')}
+                                                    accept="image/*"
+                                                    onChange={() => handleFileChange('fldPANFileName')}
                                                 />
-                                                {/* <Button
-                                                    variant="primary"
-                                                    onClick={() => triggerFileInput('fldPANFileName')}
-                                                >
-                                                    Upload PAN File
-                                                </Button> */}
-
-                                                <Button variant="primary"
-                                                    onClick={() => triggerFileInput('fldPANFileName')}
-                                                    style={{
-                                                        marginRight: '10px',
-                                                        backgroundColor: 'transparent',
-                                                        border: 'none',
-                                                        padding: '0',
-                                                        color: '#338333'
-                                                    }}>
-                                                    <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                </Button>
-                                                {userform.fldPANFileName && <span>{userform.fldPANFileName}</span>}
+                                                {imagePreviews.fldPANFileName && (
+                                                    <div>
+                                                        <img
+                                                            src={imagePreviews.fldPANFileName.previewUrl}
+                                                            alt="PAN Preview"
+                                                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                                        />
+                                                        <p>{imagePreviews.fldPANFileName.file.name}</p>
+                                                    </div>
+                                                )}
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -389,33 +415,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="4">
-                                                {/* Aadhaar File Input */}
+                                                <label>Aadhaar File</label>
                                                 <input
+                                                    ref={fileInputRefs.fldAadhaarFileName}
                                                     type="file"
                                                     accept="image/*"
-                                                    id="fldAadhaarFileName"
-                                                    style={{ display: 'none' }}
-                                                    onChange={(e) => handleFileChange(e, 'fldAadhaarFileName')}
+                                                    onChange={() => handleFileChange('fldAadhaarFileName')}
                                                 />
-                                                {/* <Button
-                                                    variant="primary"
-                                                    onClick={() => triggerFileInput('fldAadhaarFileName')}
-                                                >
-                                                    Upload Aadhaar File
-                                                </Button> */}
-
-                                                <Button variant="primary"
-                                                    onClick={() => triggerFileInput('fldAadhaarFileName')}
-                                                    style={{
-                                                        marginRight: '10px',
-                                                        backgroundColor: 'transparent',
-                                                        border: 'none',
-                                                        padding: '0',
-                                                        color: '#338333'
-                                                    }}>
-                                                    <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                </Button>
-                                                {userform.fldAadhaarFileName && <span>{userform.fldAadhaarFileName}</span>}
+                                                {imagePreviews.fldAadhaarFileName && (
+                                                    <div>
+                                                        <img
+                                                            src={imagePreviews.fldAadhaarFileName.previewUrl}
+                                                            alt="Aadhaar Preview"
+                                                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                                        />
+                                                        <p>{imagePreviews.fldAadhaarFileName.file.name}</p>
+                                                    </div>
+                                                )}
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -445,33 +461,23 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
 
                                             {selectedOption === 'yes' ? (
                                                 <Form.Group as={Col} md="4">
-                                                    {/* Passbook File Input */}
+                                                    <label>Passbook File</label>
                                                     <input
+                                                        ref={fileInputRefs.fldPassbookFileName}
                                                         type="file"
                                                         accept="image/*"
-                                                        id="fldPassbookFileName"
-                                                        style={{ display: 'none' }}
-                                                        onChange={(e) => handleFileChange(e, 'fldPassbookFileName')}
+                                                        onChange={() => handleFileChange('fldPassbookFileName')}
                                                     />
-                                                    {/* <Button
-                                                        variant="primary"
-                                                        onClick={() => triggerFileInput('fldPassbookFileName')}
-                                                    >
-                                                        Upload Passbook File
-                                                    </Button> */}
-
-                                                    <Button variant="primary"
-                                                        onClick={() => triggerFileInput('fldPassbookFileName')}
-                                                        style={{
-                                                            marginRight: '10px',
-                                                            backgroundColor: 'transparent',
-                                                            border: 'none',
-                                                            padding: '0',
-                                                            color: '#338333'
-                                                        }}>
-                                                        <AiOutlineUpload style={{ fontSize: '25px' }} />
-                                                    </Button>
-                                                    {userform.fldPassbookFileName && <span>{userform.fldPassbookFileName}</span>}
+                                                    {imagePreviews.fldPassbookFileName && (
+                                                        <div>
+                                                            <img
+                                                                src={imagePreviews.fldPassbookFileName.previewUrl}
+                                                                alt="Passbook Preview"
+                                                                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                                            />
+                                                            <p>{imagePreviews.fldPassbookFileName.file.name}</p>
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             ) : ('')}
 
@@ -531,7 +537,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                     </Box>
                 </Container>
             </ThemeProvider>
-        </ValidationForm>
+        </ValidationForm >
     );
 };
 

@@ -13,7 +13,7 @@ import { useRef } from 'react';
 
 const theme = createTheme();
 
-function VendorManagement({ securityCode }) {
+function VendorManagement({ securityCode, vendorCode }) {
 
     const navigate = useNavigate();
 
@@ -74,10 +74,10 @@ function VendorManagement({ securityCode }) {
         fldIsPrepared: false,
         fldIsVerified: false,
         fldIsAuthorized: false,
-        fldGSTFileName: "",
-        fldPANFileName: "",
-        fldAadhaarFileName: "",
-        fldPassbookFileName: "",
+        fldGSTFileName: null || "",
+        fldPANFileName: null || "",
+        fldAadhaarFileName: null || "",
+        fldPassbookFileName: null || "",
         fldFKAccType: 224,
         fldAdditionalContactNumber: "",
         fldReference: "",
@@ -94,27 +94,146 @@ function VendorManagement({ securityCode }) {
         fldContactEMailId: null,
         fldFKPaymentTerms: 0,
         fldNoOfVessal: 0,
-        fldVessalCapasity: ""
+        fldVessalCapasity: "",
+        fldAccountContactPerson: "",
+        fldAccountContactNo: "",
+        fldAccountMailId: "",
+        fieldName: []
     });
 
-    const fileInputRef = useRef(null);
-    const [fldId, setFldId] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(true);
-    const [vendorCode, setVendorCode] = useState('fldVendorCode');
     const [checkboxChecked, setCheckboxChecked] = useState(false);
     const [error, setError] = useState('');
-    const [imagePreviews, setImagePreviews] = useState([]);
-    const [uploadImages, setUploadImages] = useState();
-    const [uploadId, setUploadId] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadId, setUploadId] = useState('')
+    const [showTable, setShowTable] = useState(false);
+
+    const [imagePreviews, setImagePreviews] = useState({
+        fldGSTFileName: null,
+        fldPANFileName: null,
+        fldAadhaarFileName: null,
+        fldPassbookFileName: null,
+    }); // Use an object to map each field to its respective file
+    console.log('imagePreviews', imagePreviews)
+
+    const fileInputRefs = {
+        fldGSTFileName: useRef(null),
+        fldPANFileName: useRef(null),
+        fldAadhaarFileName: useRef(null),
+        fldPassbookFileName: useRef(null),
+    };
+
+    console.log('uploadId', uploadId)
+
 
 
     useEffect(() => {
-        if (fldId && fldId !== '') {
-            handleUpload(fldId)
+        if (uploadId !== '') {
+            handleUpload(uploadId)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fldId])
+
+    }, [uploadId])
+
+    useEffect(() => {
+        const headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Content-Type': 'application/json',
+            dbname: Cookies.get('DATABASE')
+        };
+
+        axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetTblVendorByVendorCode/GetByVendorCode/${vendorCode}`, { headers })
+            .then((res) => {
+                const data = res.data;
+                console.log('Data:', data);
+                setUserform({
+                    fldId: data.fldId,
+                    fldProgram: data.fldProgram,
+                    fldFKUser: 2,
+                    fldVendorName: data.fldVendorName,
+                    fldVendorCode: data.fldVendorCode,
+                    fldVendorAddress: data.fldVendorAddress,
+                    fldContactPerson: data.fldContactPerson,
+                    fldEMail: data.fldEMail,
+                    fldContactNo: data.fldContactNo,
+                    fldDesignation: data.fldDesignation,
+                    fldBankName: data.fldBankName,
+                    fldAccountHolderName: data.fldAccountHolderName,
+                    fldAccountNo: data.fldAccountNo,
+                    fldAccountType: data.fldAccountType,
+                    fldBranchName: data.fldBranchName,
+                    fldIFSCCode: data.fldIFSCCode,
+                    fldGSTNo: data.fldGSTNo,
+                    fldPANNo: data.fldPANNo,
+                    fldAadharNumber: data.fldAadharNumber,
+                    fldPassBookorCheque: data.fldPassBookorCheque,
+                    fldProductionCapacityPerWeek: data.fldProductionCapacityPerWeek,
+                    fldTeamStrength: data.fldTeamStrength,
+                    fldIsActive: true,
+                    fldEnteredSysId: data.fldEnteredSysId,
+                    fldCreatedBy: 2,
+                    fldCreatedDt: today.toISOString(),
+                    fldModifiedBy: 0,
+                    fldModifiedDt: today.toISOString(),
+                    fldDeletedBy: 0,
+                    fldDeletedDt: today.toISOString(),
+                    fldFKState: 2,
+                    fldState: data.fldState,
+                    fldAddress1: data.fldAddress1,
+                    fldAddress2: data.fldAddress2,
+                    fldFKArea: 2,
+                    fldArea: data.fldArea,
+                    fldCity: data.fldCity,
+                    fldPincode: data.fldPincode,
+                    fldFKStatus: data.fldFKStatus,
+                    fldStatus: data.fldStatus,
+                    fldRejectionReason: data.fldRejectionReason,
+                    fldRejectReasonPrepare: data.fldRejectReasonPrepare,
+                    fldRejectReasonVerify: data.fldRejectReasonVerify,
+                    fldRejecReasonAuthorize: data.fldRejecReasonAuthorize,
+                    fldPreparedBy: data.fldPreparedBy,
+                    fldPrepareDate: today.toISOString(),
+                    fldVerifyBy: data.fldPreparedBy,
+                    fldVerifyDate: today.toISOString(),
+                    fldAuthorizeBy: data.fldPreparedBy,
+                    fldAuthorizeDate: today.toISOString(),
+                    fldApprovalStatus: 0,
+                    fldIsPrepared: false,
+                    fldIsVerified: false,
+                    fldIsAuthorized: false,
+                    fldGSTFileName: data.fldGSTFileName,
+                    fldPANFileName: data.fldPANFileName,
+                    fldAadhaarFileName: data.fldAadhaarFileName,
+                    fldPassbookFileName: data.fldPassbookFileName,
+                    fldFKAccType: data.fldFKAccType,
+                    fldAdditionalContactNumber: data.fldAdditionalContactNumber,
+                    fldReference: data.fldReference,
+                    fldMachineDetails: data.fldMachineDetails,
+                    fldDiaDetails: data.fldDiaDetails,
+                    fldGaugeDetail: data.fldGaugeDetail,
+                    fldSampleVesselCapacity: data.fldSampleVesselCapacity,
+                    fldNoOfMachine: data.fldNoOfMachine,
+                    fldNoOfSampleVessel: data.fldNoOfSampleVessel,
+                    fldUdhayamCeriticate: data.fldUdhayamCeriticate,
+                    fldTDSorTCSDeclarationForm: data.fldTDSorTCSDeclarationForm,
+                    fldDeclarationOfMSME: data.fldDeclarationOfMSME,
+                    fldContactNameDepartment: data.fldContactNameDepartment,
+                    fldContactEMailId: data.fldContactEMailId,
+                    fldFKPaymentTerms: data.fldFKPaymentTerms,
+                    fldNoOfVessal: data.fldNoOfVessal,
+                    fldVessalCapasity: data.fldVessalCapasity,
+                    fldAccountContactPerson: data.fldAccountContactPerson,
+                    fldAccountContactNo: data.fldAccountContactNo,
+                    fldAccountMailId: data.fldAccountMailId,
+                })
+
+            })
+            .catch((error) => {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            });
+    }, []);
+
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -133,85 +252,59 @@ function VendorManagement({ securityCode }) {
         }));
     };
 
+    const handleAddClick = () => {
+        setShowTable(!showTable); // Toggle table visibility
+    };
 
-    const handleFileChange = (e, fieldName) => {
-        const file = e.target.files[0];
+
+    const handleFileChange = (fieldName) => {
+        const file = fileInputRefs[fieldName].current.files[0]; // Get the first file selected for this field
         if (file) {
-            // Update the userform state with the selected file name
-            setUserform((prevState) => ({
-                ...prevState,
-                [fieldName]: file.name, // Save the file name or URL in the state
-            }));
-        } else {
-            setError("No file selected.");
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreviews((prevState) => ({
+                    ...prevState,
+                    [fieldName]: { file, previewUrl: e.target.result }, // Update the specific field with file and preview
+                }));
+            };
+            reader.readAsDataURL(file);
         }
     };
 
-    // Trigger the file input to open for each field (one by one)
-    const triggerFileInput = (field) => {
-        document.getElementById(field).click();
-    };
-
-    // Handle file upload on the "Upload" button click
-    const handleUpload = async () => {
+    // Handle file upload (sending the files to the server)
+    const handleUpload = (fldId) => {
+        console.log('calling......IO', fldId)
         const formData = new FormData();
-        let filesSelected = false;  // Flag to check if any file is selected
 
-        // List of all file input fields
-        const fileFields = [
-            'fldGSTFileName',
-            'fldPANFileName',
-            'fldAadhaarFileName',
-            'fldPassbookFileName'
-        ];
-
-        // Iterate over each field and check if a file is selected
-        for (let field of fileFields) {
-            const fileInput = document.getElementById(field);
-
-            // Check if the fileInput exists and if a file is selected
-            if (fileInput && fileInput.files && fileInput.files[0]) {
-                formData.append(field, fileInput.files[0]); // Append the selected file to FormData
-                filesSelected = true;  // Set the flag to true as files are selected
+        // Append each file to the corresponding field in FormData
+        Object.keys(imagePreviews).forEach((fieldName) => {
+            const preview = imagePreviews[fieldName];
+            if (preview?.file) {
+                formData.append(fieldName, preview.file); // Append the file under the corresponding field name
             }
-        }
+        });
 
-        // If no files are selected, show an error
-        if (!filesSelected) {
-            setError("Please select files for upload.");
-            return;
-        }
-
-        // Make sure fldId is available (from handleSubmit response)
-        if (!fldId) {
-            setError("fldId is missing. Please submit the form first.");
-            return;
-        }
-
-        try {
-            // Make the API call to upload the files
-            const response = await axios.post(
-                `${Config.baseUrl}/api/TblVendorManagement/VendorImageUpload?FldId=${fldId}`, // Use the fldId from state
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        dbname: Cookies.get('DATABASE'),
-                    },
-                }
-            );
-
-            console.log('Upload response:', response.data);
-            if (response.data.success) {
-                alert('Files uploaded successfully!');
-            } else {
-                setError("File upload failed. Please try again.");
+        // Send the formData to the server
+        axios.post(
+            `${Config.baseUrl}/api/TblVendorManagement/VendorImageUpload?FldId=${fldId}`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    dbname: Cookies.get('DATABASE'),
+                },
             }
-        } catch (error) {
-            console.error('Error uploading files:', error);
-            setError("Error uploading files. Please try again.");
-        }
+        )
+            .then(response => {
+                console.log('Upload success:', response.data);
+            })
+            .catch(error => {
+                console.error('Error uploading images:', error);
+            });
     };
+
+
+
 
 
 
@@ -236,6 +329,8 @@ function VendorManagement({ securityCode }) {
     const prevStep = () => setStep(prev => prev - 1);
 
 
+
+
     const handleSubmit = async () => {
         console.log('Final Data:', userform);
 
@@ -246,32 +341,74 @@ function VendorManagement({ securityCode }) {
             dbname: Cookies.get('DATABASE'),
         };
 
-        try {
-            const res = await axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${securityCode}`, userform, { headers });
-            const data = res.data;
-            console.log('Data:', data);
 
-            if (data && data.fldVendorCode) {
-                setFldId(data.fldId); // Store fldId here
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Vendor Created',
-                    html: `Please note down your VENDOR CODE: <b>${data.fldVendorCode}</b>`,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
+        if (securityCode) {
+            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${securityCode}`, userform, { headers })
+                .then((res) => {
+                    let data = res.data;
+                    console.log('Data:', data);
+
+                    if (isPopupOpen && data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Vendor Created',
+                            html: `Please note down your VENDOR CODE: <b>${data?.fldVendorCode}</b>`,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                navigate('/vendor/security');
+                            }
+                        });
+
+                        toast.success('Vendor created successfully!');
+
+                    }
+                    setUploadId(res.data.fldId)
+                })
+                .catch((error) => {
+                    console.error('Error:', error.response ? error.response.data : error.message);
+                    toast.error('Error creating vendor. Please try again.');
+                });
+        } else if (vendorCode) {
+            axios.patch(`${Config.baseUrl}/api/TblVendorManagement/UpdateTblVendorByVendorCode/UpdateByVendorCode/${vendorCode}`, userform, { headers })
+                .then((result) => {
                     if (result.isConfirmed) {
                         navigate('/vendor/security');
                     }
                 });
-                toast.success('Vendor created successfully!');
-            }
-        } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
-            toast.error('Error creating vendor. Please try again.');
+
+            toast.success('Vendor created successfully!');
+
+
+        } else {
+            throw new Error("No valid code (securityCode or vendorCode) found for submission.");
         }
+
+        // const data = res.data;
+        // console.log('DataResults:', data);
+
+        // if (data && data.fldVendorCode) {
+        //     Swal.fire({
+        //         icon: 'success',
+        //         title: vendorCode ? 'Vendor Updated' : 'Vendor Created',
+        //         html: `Please note down your VENDOR CODE: <b>${data.fldVendorCode}</b>`,
+        //         confirmButtonText: 'OK'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             navigate('/vendor/security');
+        //         }
+        //     });
+        //     toast.success(vendorCode ? 'Vendor updated successfully!' : 'Vendor created successfully!');
+        // }
+
+
+        // setUploadId(res.data.fldId)
+
+
 
         console.log('userform', userform);
     };
+
 
 
     return (
@@ -282,6 +419,7 @@ function VendorManagement({ securityCode }) {
                     handleCheckboxChange={handleCheckboxChange}
                     checkboxChecked={checkboxChecked}
                     userform={userform}
+                    vendorCode={vendorCode}
                     handleErrorSubmit={handleErrorSubmit}
                     nextStep={nextStep}
                 />
@@ -291,9 +429,10 @@ function VendorManagement({ securityCode }) {
                     nextStep={nextStep}
                     prevStep={prevStep}
                     handleChange={handleChange}
-                    triggerFileInput={triggerFileInput}
+                    // triggerFileInput={triggerFileInput}
                     handleFileChange={handleFileChange}
-                    handleUpload={handleUpload}
+                    // handleUpload={handleUpload}
+                    fileInputRefs={fileInputRefs}
                     error={error}
                     setError={setError}
                     userform={userform}
@@ -307,6 +446,8 @@ function VendorManagement({ securityCode }) {
                     handleChange={handleChange}
                     userform={userform}
                     handleSubmit={handleSubmit}
+                    handleAddClick={handleAddClick}
+                    showTable={showTable}
                 />
             )}
         </div>
