@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { createTheme } from '@mui/material/styles';
 import BankDetails from './BankDetails';
 import InfrastructureData from './InfrastructureData';
@@ -106,6 +106,9 @@ function VendorManagement({ securityCode, vendorCode }) {
     const [error, setError] = useState('');
     const [uploadId, setUploadId] = useState('')
     const [showTable, setShowTable] = useState(false);
+    const [vesselList, setVesselList] = useState([]);
+
+    console.log('vesselList', vesselList)
 
     const [imagePreviews, setImagePreviews] = useState({
         fldGSTFileName: null,
@@ -235,26 +238,69 @@ function VendorManagement({ securityCode, vendorCode }) {
 
 
 
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+
+    //     // Convert to number for specific fields
+    //     let updatedValue = value; // Default to the original value
+
+    //     // Check if the field should be treated as numeric
+    //     if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel' || name === 'fldNoOfVessal') {
+    //         updatedValue = value ? Number(value) : ''; // Convert to number or empty
+    //     }
+
+    //     setUserform(prevData => ({
+    //         ...prevData,
+    //         [name]: updatedValue,
+    //     }));
+    // };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        // Convert to number for specific fields
-        let updatedValue = value; // Default to the original value
-
-        // Check if the field should be treated as numeric
+        let updatedValue = value;
         if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel' || name === 'fldNoOfVessal') {
             updatedValue = value ? Number(value) : ''; // Convert to number or empty
         }
-
-        setUserform(prevData => ({
-            ...prevData,
-            [name]: updatedValue,
+        setUserform((prev) => ({
+            ...prev,
+            [name]: updatedValue
         }));
     };
 
-    const handleAddClick = () => {
-        setShowTable(!showTable); // Toggle table visibility
-    };
+    const handleAddClick = useCallback(() => {
+        const { fldVessalCapasity, fldNoOfVessal } = userform;
+
+        const vesselCapacity = String(fldVessalCapasity).trim();
+        const noOfVessels = String(fldNoOfVessal).trim();
+
+        if (vesselCapacity && noOfVessels) {
+            const newVessel = {
+                capacity: vesselCapacity,
+                numberOfVessels: noOfVessels,
+            };
+
+            setVesselList((prevList) => {
+                const updatedList = [...prevList, newVessel];
+
+                const newCapacities = updatedList.map((vessel) => vessel.capacity).join(',');
+                const newVesselCounts = updatedList.map((vessel) => vessel.numberOfVessels).join(',');
+
+                setUserform((prev) => ({
+                    ...prev,
+                    fldVessalCapasity: newCapacities,
+                    fldNoOfVessal: newVesselCounts,
+                }));
+
+                return updatedList;
+            });
+
+            setShowTable(true);
+        } else {
+            alert('Please fill both fields');
+        }
+    }, [userform.fldVessalCapasity, userform.fldNoOfVessal]);
+
+
 
 
     const handleFileChange = (fieldName) => {
@@ -448,6 +494,9 @@ function VendorManagement({ securityCode, vendorCode }) {
                     handleSubmit={handleSubmit}
                     handleAddClick={handleAddClick}
                     showTable={showTable}
+                    vesselList={vesselList}
+                    setVesselList={setVesselList}
+                    setUserform={setUserform}
                 />
             )}
         </div>
