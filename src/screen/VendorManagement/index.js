@@ -98,7 +98,6 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldAccountContactPerson: "",
         fldAccountContactNo: "",
         fldAccountMailId: "",
-        fieldName: []
     });
 
     const [isPopupOpen, setIsPopupOpen] = useState(true);
@@ -115,6 +114,8 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldPANFileName: null,
         fldAadhaarFileName: null,
         fldPassbookFileName: null,
+        fldTDSorTCSDeclarationForm: null,
+        fldDeclarationOfMSME: null,
     }); // Use an object to map each field to its respective file
     console.log('imagePreviews', imagePreviews)
 
@@ -123,6 +124,8 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldPANFileName: useRef(null),
         fldAadhaarFileName: useRef(null),
         fldPassbookFileName: useRef(null),
+        fldTDSorTCSDeclarationForm: useRef(null),
+        fldDeclarationOfMSME: useRef(null)
     };
 
     console.log('uploadId', uploadId)

@@ -10,7 +10,7 @@ import { useState } from 'react';
 function App() {
   const [securityCode, setSecurityCode] = useState('');
   const [vendorCode, setVendorCode] = useState('');
-  const [isVendorCode, setIsVendorCode] = useState(true);
+  const [isVendorCode, setIsVendorCode] = useState(false);
 
   const handleChange = (event) => {
     const { value } = event.target;

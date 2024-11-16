@@ -481,45 +481,50 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                 </Form.Group>
                                             ) : ('')}
 
-                                            <Form.Group as={Col} md="4">
-                                                <Button
-                                                    variant="success"
-                                                    onClick={handleUpload}
-                                                    className="ml-auto btn-sm"
-                                                    style={{ display: 'block', marginTop: '10px' }}
-                                                >
-                                                    Upload All Files
-                                                </Button>
-                                            </Form.Group>
-
 
 
                                         </Row>
 
                                         <Row className="d-flex align-items-center">
-                                            <Form.Group as={Col} md="4" controlId="fldDeclarationOfMSME">
-                                                <Form.Label>
-                                                    Declaration Of MSME<span className="text-danger">*</span>
-                                                </Form.Label>
-                                                <div>
-                                                    <input
-                                                        type="file"
-                                                        accept=".pdf,.doc,.docx"
-                                                        onChange={handleFileChange}
-                                                    />
-                                                    {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-                                                    <button
-                                                        // onClick={handleFileUpload}
-                                                        disabled={isUploading || !selectedFile}
-                                                    >
-                                                        {isUploading ? 'Uploading...' : 'Upload File'}
-                                                    </button>
-
-                                                    {uploadSuccess !== null && (
-                                                        <p>{uploadSuccess ? 'File uploaded successfully!' : 'Failed to upload file.'}</p>
-                                                    )}
-                                                </div>
+                                            <Form.Group as={Col} md="4">
+                                                <label>Declaration of MSME Form</label>
+                                                <input
+                                                    ref={fileInputRefs.fldDeclarationOfMSME}
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={() => handleFileChange('fldDeclarationOfMSME')}
+                                                />
+                                                {imagePreviews.fldDeclarationOfMSME && (
+                                                    <div>
+                                                        <img
+                                                            src={imagePreviews.fldDeclarationOfMSME.previewUrl}
+                                                            alt="Passbook Preview"
+                                                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                                        />
+                                                        <p>{imagePreviews.fldDeclarationOfMSME.file.name}</p>
+                                                    </div>
+                                                )}
                                             </Form.Group>
+                                            <Form.Group as={Col} md="4">
+                                                <label>TDS or TCS Declaration Form</label>
+                                                <input
+                                                    ref={fileInputRefs.fldTDSorTCSDeclarationForm}
+                                                    type="file"
+                                                    accept=".pdf, .doc, .docx"  // Accept PDF and DOC/DOCX files only
+                                                    onChange={() => handleFileChange('fldTDSorTCSDeclarationForm')}
+                                                />
+                                                {imagePreviews.fldTDSorTCSDeclarationForm && (
+                                                    <div>
+                                                        <img
+                                                            src={imagePreviews.fldTDSorTCSDeclarationForm.previewUrl}
+                                                            alt="File Preview"
+                                                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                                        />
+                                                        <p>{imagePreviews.fldTDSorTCSDeclarationForm.file.name}</p>
+                                                    </div>
+                                                )}
+                                            </Form.Group>
+
                                         </Row>
                                     </Card.Body>
                                 </Card>
