@@ -420,10 +420,22 @@ function VendorManagement({ securityCode, vendorCode }) {
                 });
         } else if (vendorCode) {
             axios.patch(`${Config.baseUrl}/api/TblVendorManagement/UpdateTblVendorByVendorCode/UpdateByVendorCode/${vendorCode}`, userform, { headers })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        navigate('/vendor/security');
+                .then((res) => {
+                    if (res.status === 200 && isPopupOpen) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Vendor Updated',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                navigate('/vendor/security');
+                            }
+                        });
+
+                        toast.success('Vendor Updated successfully!');
+
                     }
+                    setUploadId(res.data.fldId)
                 });
 
             toast.success('Vendor created successfully!');
