@@ -581,6 +581,97 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                                 </Row>
                             </>
                         ) : ('')}
+
+                        {userform?.fldProgram === 'STITCHING DC' ? (
+                            <>
+                                <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
+                                    Machine Information
+                                </Typography>
+
+                                <Row>
+                                    <Col xl={12} md={12}>
+                                        <Card style={{ borderRadius: '15px', marginBottom: '1rem' }}>
+                                            <Card.Body>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                                                    <Button
+                                                        variant="primary"
+                                                        onClick={handleAddClick}
+                                                    >
+                                                        Add
+                                                    </Button>
+                                                </div>
+
+
+
+                                                <Row className="d-flex align-items-center">
+                                                    <Form.Group as={Col} md="6" controlId="fldVessalCapasity">
+                                                        <Form.Label>
+                                                            Machine Information<span className="text-danger">*</span>
+                                                        </Form.Label>
+                                                        <TextInput
+                                                            name="fldVessalCapasity"
+                                                            placeholder="Machine Information"
+                                                            required
+                                                            autoComplete="off"
+                                                            maxLength={50}
+                                                            value={userform?.fldVessalCapasity}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} md="6" controlId="fldNoOfVessal">
+                                                        <Form.Label>
+                                                            Production Capacity Per Week<span className="text-danger">*</span>
+                                                        </Form.Label>
+                                                        <TextInput
+                                                            name="fldNoOfVessal"
+                                                            placeholder="Production Capacity Per Week"
+                                                            required
+                                                            autoComplete="off"
+                                                            maxLength={50}
+                                                            value={userform?.fldNoOfVessal}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </Form.Group>
+
+                                                </Row>
+
+                                                {showTable && (
+                                                    <Table striped bordered hover>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Machine Information</th>
+                                                                <th>Production Capacity Per Week</th>
+                                                                <th>Action</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {vesselList.map((vessel, index) => (
+                                                                <tr key={index}>
+                                                                    <td>{vessel.capacity}</td>
+                                                                    <td>{vessel.numberOfVessels}</td>
+                                                                    <td>
+                                                                        <Button
+                                                                            variant="danger"
+                                                                            size="sm"
+                                                                            onClick={() => handleDelete(index)}
+                                                                        >
+                                                                            Delete
+                                                                        </Button>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </Table>
+                                                )}
+
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            </>
+                        ) : ('')}
+
                         <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                             Capacity
                         </Typography>

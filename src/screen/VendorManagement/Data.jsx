@@ -483,7 +483,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                 <TextInput
                                                     name="fldAdditionalContactNumber"
                                                     id="fldAdditionalContactNumber"
-                                                    placeholder="Additional Contact Number"
+                                                    placeholder="Contact Number"
                                                     autoComplete="off"
                                                     pattern="^[0-9]{10}$"  // Updated pattern for exactly 10 digits
                                                     maxLength={10}         // Set maxLength to 10
