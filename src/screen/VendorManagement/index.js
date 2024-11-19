@@ -93,7 +93,7 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldContactNameDepartment: null,
         fldContactEMailId: null,
         fldFKPaymentTerms: 0,
-        fldNoOfVessal: 0,
+        fldNoOfVessal: "",
         fldVessalCapasity: "",
         fldAccountContactPerson: "",
         fldAccountContactNo: "",
@@ -238,6 +238,10 @@ function VendorManagement({ securityCode, vendorCode }) {
             });
     }, []);
 
+    // useEffect(() => {
+    //     axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetVendorImage?fldId=${userform?.fldId}`).then((res) => console.log('res', res))
+    // }, [])
+
 
 
 
@@ -261,7 +265,7 @@ function VendorManagement({ securityCode, vendorCode }) {
     const handleChange = (e) => {
         const { name, value } = e.target;
         let updatedValue = value;
-        if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel' || name === 'fldNoOfVessal') {
+        if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel') {
             updatedValue = value ? Number(value) : ''; // Convert to number or empty
         }
         setUserform((prev) => ({
@@ -435,7 +439,33 @@ function VendorManagement({ securityCode, vendorCode }) {
                         toast.success('Vendor Updated successfully!');
 
                     }
-                    setUploadId(res.data.fldId)
+                    const formData = new FormData();
+
+                    // Append each file to the corresponding field in FormData
+                    Object.keys(imagePreviews).forEach((fieldName) => {
+                        const preview = imagePreviews[fieldName];
+                        if (preview?.file) {
+                            formData.append(fieldName, preview.file); // Append the file under the corresponding field name
+                        }
+                    });
+
+                    // Send the formData to the server
+                    axios.patch(
+                        `${Config.baseUrl}/api/TblVendorManagement/UpdateVendorImageUpload?FldId=${userform?.fldId}`,
+                        formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                dbname: Cookies.get('DATABASE'),
+                            },
+                        }
+                    )
+                        .then(response => {
+                            console.log('Upload success:', response.data);
+                        })
+                        .catch(error => {
+                            console.error('Error uploading images:', error);
+                        });
                 });
 
             toast.success('Vendor created successfully!');

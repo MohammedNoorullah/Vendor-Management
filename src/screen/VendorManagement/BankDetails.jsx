@@ -176,9 +176,20 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     placeholder='Contact Number'
                                                     required
                                                     autoComplete="off"
-                                                    maxLength={50}
+                                                    pattern="^[0-9]{10}$"
+                                                    maxLength={10}
+                                                    errorMessage={{
+                                                        pattern: 'Only numeric values are allowed, and exactly 10 digits are required.'
+                                                    }}
                                                     value={userform?.fldAccountContactNo}
-                                                    onChange={handleChange}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+
+                                                        // Allow only if the length is exactly 10 digits and numeric
+                                                        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
+                                                            handleChange(e); // Call your original handleChange
+                                                        }
+                                                    }}
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} md="6" controlId="fldAccountMailId">
@@ -188,7 +199,6 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                 <TextInput
                                                     name="fldAccountMailId"
                                                     placeholder='Account Holder Name'
-                                                    required
                                                     autoComplete="off"
                                                     maxLength={50}
                                                     value={userform?.fldAccountMailId}
@@ -221,7 +231,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     required
                                                     autoComplete="off"
                                                     pattern="^[0-9]{0,15}$"
-                                                    maxLength={15}
+                                                    maxLength={20}
                                                     errorMessage={{
                                                         pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
                                                     }}

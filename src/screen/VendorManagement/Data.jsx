@@ -61,7 +61,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
             });
     }, []);
 
-    
+
 
     const propertyModal = (status) => {
         // dispatch({ type: PROPERTY_MODAL_OPEN, id: componentId });
@@ -255,9 +255,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                 </Form.Group>
                                             </Form.Group> */}
 
-                                            <Form.Group as={Col} md="12">
-                                                <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*Do not enter Area / City / Pincode / State in the Address*</span></Form.Label>
-                                            </Form.Group>
+
 
                                             <Form.Group as={Col} md="12">
                                                 <Form.Label htmlFor="fldAddress1">Address 1<span className="text-danger">*</span></Form.Label>
@@ -274,12 +272,15 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="12">
+                                                <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*Do not enter Area / City / Pincode / State in the Address*</span></Form.Label>
+                                            </Form.Group>
+
+                                            <Form.Group as={Col} md="12">
                                                 <Form.Label htmlFor="fldAddress2">Address 2<span className="text-danger">*</span></Form.Label>
                                                 <TextInput
                                                     name="fldAddress2"
                                                     id="fldAddress2"
                                                     placeholder="Address 2"
-                                                    required
                                                     autoComplete="off"
                                                     maxLength={100}
                                                     value={userform?.fldAddress2}
