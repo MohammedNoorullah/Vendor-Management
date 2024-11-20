@@ -341,6 +341,9 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         <p>{imagePreviews.fldGSTFileName.file.name}</p>
                                                     </div>
                                                 )}
+                                                {userform?.fldGSTFileName !== "" && (
+                                                    <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
+                                                )}
                                             </Form.Group>
 
 
@@ -395,6 +398,9 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         <p>{imagePreviews.fldPANFileName.file.name}</p>
                                                     </div>
                                                 )}
+                                                {userform?.fldPANFileName !== "" && (
+                                                    <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
+                                                )}
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -442,6 +448,9 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         <p>{imagePreviews.fldAadhaarFileName.file.name}</p>
                                                     </div>
                                                 )}
+                                                {userform?.fldAadhaarFileName !== "" && (
+                                                    <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
+                                                )}
                                             </Form.Group>
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -479,15 +488,19 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         onChange={() => handleFileChange('fldPassbookFileName')}
                                                     />
                                                     {imagePreviews.fldPassbookFileName && imagePreviews.fldPassbookFileName.previewUrl && (
-                                                        <div>
+                                                        <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <img
                                                                 src={imagePreviews.fldPassbookFileName.previewUrl}
                                                                 alt="Passbook Preview"
                                                                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                                                             />
-                                                            <p>{imagePreviews.fldPassbookFileName.file.name}</p>
+                                                            <p style={{ marginLeft: '10px' }}>{imagePreviews.fldPassbookFileName.file.name}</p>
                                                         </div>
                                                     )}
+                                                    {userform?.fldPassbookFileName !== "" && (
+                                                        <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
+                                                    )}
+
                                                 </Form.Group>
                                             ) : ('')}
 
@@ -514,6 +527,9 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         <p>{imagePreviews.fldDeclarationOfMSME.file.name}</p>
                                                     </div>
                                                 )}
+                                                {userform?.fldDeclarationOfMSME !== "" && (
+                                                    <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
+                                                )}
                                             </Form.Group>
                                             <Form.Group as={Col} md="4">
                                                 <label>TDS or TCS Declaration Form</label>
@@ -532,6 +548,9 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         />
                                                         <p>{imagePreviews.fldTDSorTCSDeclarationForm.file.name}</p>
                                                     </div>
+                                                )}
+                                                {userform?.fldTDSorTCSDeclarationForm !== "" && (
+                                                    <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
                                                 )}
                                             </Form.Group>
 
