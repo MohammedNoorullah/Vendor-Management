@@ -54,7 +54,7 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldState: "",
         fldAddress1: "",
         fldAddress2: "",
-        fldFKArea: 2,
+        fldFKArea: 0,
         fldArea: "",
         fldCity: "",
         fldPincode: "",
@@ -186,7 +186,7 @@ function VendorManagement({ securityCode, vendorCode }) {
                     fldState: data.fldState,
                     fldAddress1: data.fldAddress1,
                     fldAddress2: data.fldAddress2,
-                    fldFKArea: 2,
+                    fldFKArea: 0,
                     fldArea: data.fldArea,
                     fldCity: data.fldCity,
                     fldPincode: data.fldPincode,
@@ -354,6 +354,23 @@ function VendorManagement({ securityCode, vendorCode }) {
             .catch(error => {
                 console.error('Error uploading images:', error);
             });
+
+        // axios.post(
+        //     `${Config.baseUrl}/api/TblVendorManagement/VendorDeclarationMSMEUpload?FldId=${fldId}`,
+        //     formData,
+        //     {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data',
+        //             dbname: Cookies.get('DATABASE'),
+        //         },
+        //     }
+        // )
+        //     .then(response => {
+        //         console.log('Upload success:', response.data);
+        //     })
+        //     .catch(error => {
+        //         console.error('Error uploading images:', error);
+        //     });
     };
 
 
