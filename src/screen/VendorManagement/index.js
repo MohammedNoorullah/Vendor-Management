@@ -242,6 +242,38 @@ function VendorManagement({ securityCode, vendorCode }) {
     //     axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetVendorImage?fldId=${userform?.fldId}`).then((res) => console.log('res', res))
     // }, [])
 
+    useEffect(() => {
+        if (vendorCode) {
+
+            const formData = new FormData();
+
+            // Append each file to the corresponding field in FormData
+            Object.keys(imagePreviews).forEach((fieldName) => {
+                const preview = imagePreviews[fieldName];
+                if (preview?.file) {
+                    formData.append(fieldName, preview.file); // Append the file under the corresponding field name
+                }
+            });
+
+            axios.get(
+                `${Config.baseUrl}/api/TblVendorManagement/GetVendorImage?fldId=${userform?.fldId}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        dbname: Cookies.get('DATABASE'),
+                    },
+                }
+            )
+                .then(response => {
+                    console.log('Upload success:', response.data);
+                })
+                .catch(error => {
+                    console.error('Error uploading images:', error);
+                });
+        }
+    }, [])
+
 
 
 
@@ -314,10 +346,11 @@ function VendorManagement({ securityCode, vendorCode }) {
         const file = fileInputRefs[fieldName].current.files[0]; // Get the first file selected for this field
         if (file) {
             const reader = new FileReader();
+            const previewUrl = URL.createObjectURL(file);
             reader.onload = (e) => {
                 setImagePreviews((prevState) => ({
                     ...prevState,
-                    [fieldName]: { file, previewUrl: e.target.result }, // Update the specific field with file and preview
+                    [fieldName]: { file, previewUrl: previewUrl }, // Update the specific field with file and preview
                 }));
             };
             reader.readAsDataURL(file);
@@ -483,6 +516,24 @@ function VendorManagement({ securityCode, vendorCode }) {
                         .catch(error => {
                             console.error('Error uploading images:', error);
                         });
+
+
+                    // axios.get(
+                    //     `${Config.baseUrl}/api/TblVendorManagement/GetVendorImage?fldId=${userform?.fldId}`,
+                    //     formData,
+                    //     {
+                    //         headers: {
+                    //             'Content-Type': 'multipart/form-data',
+                    //             dbname: Cookies.get('DATABASE'),
+                    //         },
+                    //     }
+                    // )
+                    //     .then(response => {
+                    //         console.log('Upload success:', response.data);
+                    //     })
+                    //     .catch(error => {
+                    //         console.error('Error uploading images:', error);
+                    //     });
                 });
 
             toast.success('Vendor created successfully!');

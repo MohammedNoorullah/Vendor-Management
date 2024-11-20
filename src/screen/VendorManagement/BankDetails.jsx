@@ -331,7 +331,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     accept="image/*"
                                                     onChange={() => handleFileChange('fldGSTFileName')}
                                                 />
-                                                {imagePreviews.fldGSTFileName && (
+                                                {imagePreviews.fldGSTFileName && imagePreviews.fldGSTFileName.previewUrl && (
                                                     <div>
                                                         <img
                                                             src={imagePreviews.fldGSTFileName.previewUrl}
@@ -385,7 +385,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     accept="image/*"
                                                     onChange={() => handleFileChange('fldPANFileName')}
                                                 />
-                                                {imagePreviews.fldPANFileName && (
+                                                {imagePreviews.fldPANFileName && imagePreviews.fldPANFileName.previewUrl && (
                                                     <div>
                                                         <img
                                                             src={imagePreviews.fldPANFileName.previewUrl}
@@ -432,7 +432,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     accept="image/*"
                                                     onChange={() => handleFileChange('fldAadhaarFileName')}
                                                 />
-                                                {imagePreviews.fldAadhaarFileName && (
+                                                {imagePreviews.fldAadhaarFileName && imagePreviews.fldAadhaarFileName.previewUrl && (
                                                     <div>
                                                         <img
                                                             src={imagePreviews.fldAadhaarFileName.previewUrl}
@@ -478,7 +478,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         accept="image/*"
                                                         onChange={() => handleFileChange('fldPassbookFileName')}
                                                     />
-                                                    {imagePreviews.fldPassbookFileName && (
+                                                    {imagePreviews.fldPassbookFileName && imagePreviews.fldPassbookFileName.previewUrl && (
                                                         <div>
                                                             <img
                                                                 src={imagePreviews.fldPassbookFileName.previewUrl}
