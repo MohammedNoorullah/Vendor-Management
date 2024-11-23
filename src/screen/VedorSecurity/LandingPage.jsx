@@ -360,13 +360,13 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginBottom: 2 }}>
                             <Typography variant="body1">
-                                <a href="/MSME_Declaration_Form.doc" download="MSME_Declaration_Form.doc">
+                                <a href="/MSME_Declaration_Form.docx" download="MSME_Declaration_Form.docx">
                                     Download MSME Declaration Form
                                 </a>
                             </Typography>
                             <Typography variant="body1">
                                 {/* Change the file path to your .doc file */}
-                                <a href="/TDS_TCS_Declaration_Form.doc" download="TDS_TCS_Declaration_Form.doc">
+                                <a href="/TDS_TCS_Declaration_Form.docx" download="TDS_TCS_Declaration_Form.docx">
                                     Download TDS / TCS Declaration Form
                                 </a>
                             </Typography>
