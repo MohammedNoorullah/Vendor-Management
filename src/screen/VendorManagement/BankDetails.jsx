@@ -247,16 +247,38 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     name="fldFKAccType"
                                                     id="fldFKAccType"
                                                     value={userform?.fldFKAccType}
-                                                    errorMessage="Please select a Acc Type."
-                                                    onChange={handleChange}
+                                                    errorMessage="Please select an Acc Type."
+                                                    onChange={(e) => {
+                                                        const selectedValue = e.target.value; // Get selected fldId (number)
+                                                        const selectedDescription = e.target.options[e.target.selectedIndex].text; // Get fldDescription (string)
+
+                                                        // Call handleChange for fldFKAccType (number)
+                                                        handleChange({
+                                                            target: {
+                                                                name: 'fldFKAccType',
+                                                                value: selectedValue
+                                                            }
+                                                        });
+
+                                                        // Call handleChange for fldAccountType (string)
+                                                        handleChange({
+                                                            target: {
+                                                                name: 'fldAccountType',
+                                                                value: selectedDescription
+                                                            }
+                                                        });
+                                                    }}
                                                 >
                                                     <option value="">Please select</option>
                                                     {accTypeList.length > 0 &&
-                                                        accTypeList.map((item) => {
-                                                            return <option value={item.fldId}>{item?.fldDescription}</option>;
-                                                        })}
+                                                        accTypeList.map((item) => (
+                                                            <option key={item.fldId} value={item.fldId}>
+                                                                {item?.fldDescription}
+                                                            </option>
+                                                        ))}
                                                 </SelectGroup>
                                             </Form.Group>
+
                                         </Row>
                                         <Row className="d-flex align-items-center">
 
