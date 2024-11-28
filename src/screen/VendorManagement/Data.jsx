@@ -125,11 +125,17 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     >
                                                         <option value="">Please select</option>
                                                         {dashboardFilterList.length > 0 &&
-                                                            dashboardFilterList.map((item) => (
-                                                                <option value={item.fldProgramName} key={item.fldId}>
-                                                                    {item.fldProgramName}
-                                                                </option>
-                                                            ))}
+                                                            dashboardFilterList.map((item) => {
+                                                                const programName = item.fldProgramName.split(' ')[0];
+
+                                                                return (
+                                                                    <option value={programName} key={item.fldId}>
+                                                                        {programName}
+                                                                    </option>
+                                                                );
+                                                            })
+                                                        }
+
                                                     </select>
                                                 </Form.Group>
                                             </Form.Group>
