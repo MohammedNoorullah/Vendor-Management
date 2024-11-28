@@ -126,7 +126,8 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                         <option value="">Please select</option>
                                                         {dashboardFilterList.length > 0 &&
                                                             dashboardFilterList.map((item) => {
-                                                                const programName = item.fldProgramName.split(' ')[0];
+                                                                const parts = item.fldProgramName.split(/DC|PO/);
+                                                                const programName = parts[0];
 
                                                                 return (
                                                                     <option value={programName} key={item.fldId}>

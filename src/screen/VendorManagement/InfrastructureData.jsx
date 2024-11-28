@@ -55,7 +55,7 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                     <Box style={{ width: '950px', margin: '0 auto', justifyContent: 'center', height: '100vh' }}>
 
 
-                        {userform?.fldProgram === 'KNITTING DC' && (
+                        {userform?.fldProgram === 'KNITTING ' && (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -225,7 +225,7 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'DYEING DC' ? (
+                        {userform?.fldProgram === 'DYEING ' ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -342,7 +342,7 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : null}
 
-                        {userform?.fldProgram === 'BLEACHING DC' ? (
+                        {userform?.fldProgram === 'BLEACHING ' ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -459,7 +459,7 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'WASHING DC' ? (
+                        {userform?.fldProgram === 'WASHING ' ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -582,7 +582,7 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'STITCHING DC' ? (
+                        {userform?.fldProgram === 'STITCHING ' ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
