@@ -460,6 +460,9 @@ function VendorManagement({ securityCode, vendorCode }) {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 navigate('/vendor/security');
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 500);
                             }
                         });
 
@@ -483,6 +486,9 @@ function VendorManagement({ securityCode, vendorCode }) {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 navigate('/vendor/security');
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 500);
                             }
                         });
 
