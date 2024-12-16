@@ -87,7 +87,7 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
         if (captchaInput === captchaValue && securityCode) {
 
             axios
-                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${securityCode}`, cpData)
+                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${'KR' + securityCode}`, cpData)
                 .then((res) => {
                     console.log('API Response:', res.data); // Log the entire response
 
@@ -229,7 +229,7 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
                     <Typography component="h1" variant="h5">
                         Vendor Management Security
                     </Typography>
-                    <Button
+                    {/* <Button
                         onClick={handleToggle}
                         variant="contained"
                         color="primary"
@@ -240,7 +240,7 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
                         }}
                     >
                         Switch to {isVendorCode ? 'Security Code' : 'Vendor Code'}
-                    </Button>
+                    </Button> */}
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -255,7 +255,7 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
                             maxWidth: '60%'
                         }}
                     >
-                        <TextField
+                        {/* <TextField
                             inputProps={{
                                 autoComplete: 'none'
                             }}
@@ -268,6 +268,31 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
                             value={isVendorCode ? vendorCode : securityCode}
                             onChange={handleChange}
                             autoComplete="off"
+                            maxLength={10}
+                            sx={{
+                                backgroundColor: '#fff',
+                                borderRadius: 10,
+                                '& .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+                                    borderRadius: 10
+                                },
+                                minWidth: '40%'
+                            }}
+                        /> */}
+
+                        <TextField
+                            inputProps={{
+                                autoComplete: 'none'
+                            }}
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="securityCode"
+                            label="Phone No"
+                            name="securityCode"
+                            value={securityCode}
+                            onChange={handleChange}
+                            autoComplete="off"
+                            maxLength={10}
                             sx={{
                                 backgroundColor: '#fff',
                                 borderRadius: 10,

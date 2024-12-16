@@ -147,7 +147,7 @@ function VendorManagement({ securityCode, vendorCode }) {
             dbname: Cookies.get('DATABASE')
         };
 
-        axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetTblVendorByVendorCode/GetByVendorCode/${vendorCode}`, { headers })
+        axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetTblVendorByVendorCode/GetByVendorCode/${securityCode}`, { headers })
             .then((res) => {
                 const data = res.data;
                 console.log('Data:', data);
@@ -243,7 +243,7 @@ function VendorManagement({ securityCode, vendorCode }) {
     // }, [])
 
     useEffect(() => {
-        if (vendorCode) {
+        if (securityCode === userform?.fldContactNo) {
 
             const formData = new FormData();
 
@@ -445,8 +445,8 @@ function VendorManagement({ securityCode, vendorCode }) {
         };
 
 
-        if (securityCode) {
-            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${securityCode}`, userform, { headers })
+        if (userform?.fldId === 0) {
+            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${'KR' + securityCode}`, userform, { headers })
                 .then((res) => {
                     let data = res.data;
                     console.log('Data:', data);
@@ -455,7 +455,7 @@ function VendorManagement({ securityCode, vendorCode }) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Vendor Created',
-                            html: `Please note down your VENDOR CODE: <b>${data?.fldVendorCode}</b>`,
+                            // html: `Please note down your VENDOR CODE: <b>${data?.fldVendorCode}</b>`,
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
@@ -475,8 +475,8 @@ function VendorManagement({ securityCode, vendorCode }) {
                     console.error('Error:', error.response ? error.response.data : error.message);
                     toast.error('Error creating vendor. Please try again.');
                 });
-        } else if (vendorCode) {
-            axios.patch(`${Config.baseUrl}/api/TblVendorManagement/UpdateTblVendorByVendorCode/UpdateByVendorCode/${vendorCode}`, userform, { headers })
+        } else if (userform?.fldId !== 0) {
+            axios.patch(`${Config.baseUrl}/api/TblVendorManagement/UpdateTblVendorByVendorCode/UpdateByVendorCode/${securityCode}`, userform, { headers })
                 .then((res) => {
                     if (res.status === 200 && isPopupOpen) {
                         Swal.fire({
