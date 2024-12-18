@@ -25,7 +25,7 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldProgram: "",
         fldFKUser: 2,
         fldVendorName: "",
-        fldVendorCode: "",
+        fldVendorCode: securityCode || "",
         fldVendorAddress: "",
         fldContactPerson: "",
         fldEMail: "",
@@ -310,7 +310,7 @@ function VendorManagement({ securityCode, vendorCode }) {
 
     const handleChange = (e) => {
 
-       
+
 
         const { name, value } = e.target;
         let updatedValue = value;
