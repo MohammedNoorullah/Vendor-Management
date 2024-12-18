@@ -34,9 +34,10 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
         const url = window.location.href;
 
         // Split the URL at '//' and then split the first part by '/'
-        const extractedCountryCode = url.split('//')[1].split('/')[0];
+        // const extractedCountryCode = url.split('//')[1].split('/')[0];
+        const extractedCountryCode = url.split('vendor')[0]
 
-        if (extractedCountryCode === 'localhost:5000') {
+        if (extractedCountryCode === 'http://localhost:5000/') {
             setCountryCode('KR');
         } else {
             setCountryCode(extractedCountryCode);
