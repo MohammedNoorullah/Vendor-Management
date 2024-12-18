@@ -31,13 +31,17 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
 
     useEffect(() => {
         // Get the full URL
-        const url = window.location.href;
+        // const url = window.location.href;
 
         // Split the URL at '//' and then split the first part by '/'
         // const extractedCountryCode = url.split('//')[1].split('/')[0];
-        const extractedCountryCode = url.split('vendor')[0]
+        // const extractedCountryCode = url.split('vendor')[0]
+        // const extractedCountryCode = url.slice(0, 2).toLowerCase();
+        const url = window.location.hostname;
 
-        if (extractedCountryCode === 'http://localhost:5000/') {
+        const extractedCountryCode = url.slice(0, 2).toLowerCase();
+
+        if (extractedCountryCode === 'lo') {
             setCountryCode('KR');
         } else {
             setCountryCode(extractedCountryCode);
