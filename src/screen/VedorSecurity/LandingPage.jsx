@@ -24,6 +24,25 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
     const [captchaValue, setCaptchaValue] = useState(generateCaptcha());
     const [errorMessage, setErrorMessage] = useState('');
 
+
+    const [currentUrl, setCurrentUrl] = useState('');
+
+    const [countryCode, setCountryCode] = useState('');
+
+    useEffect(() => {
+        // Get the full URL
+        const url = window.location.href;
+
+        // Split the URL at '//' and then split the first part by '/'
+        const extractedCountryCode = url.split('//')[1].split('/')[0];
+
+        // Set the extracted country code to state
+        setCountryCode(extractedCountryCode);
+    }, []);
+
+    console.log('currentUrl', currentUrl)
+    console.log('countryCode', countryCode)
+
     function generateCaptcha(length = 6) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -87,7 +106,7 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
         if (captchaInput === captchaValue && securityCode) {
 
             axios
-                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${'KR' + securityCode}`, cpData)
+                .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${countryCode + securityCode}`, cpData)
                 .then((res) => {
                     console.log('API Response:', res.data); // Log the entire response
 
@@ -281,7 +300,8 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
 
                         <TextField
                             inputProps={{
-                                autoComplete: 'none'
+                                autoComplete: 'none',
+                                maxLength: 10, // Ensures no more than 10 characters are typed
                             }}
                             margin="normal"
                             required
@@ -290,7 +310,10 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
                             label="Phone No"
                             name="securityCode"
                             value={securityCode}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                handleChange(e, value);
+                            }}
                             autoComplete="off"
                             maxLength={10}
                             sx={{
@@ -301,7 +324,9 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
                                 },
                                 minWidth: '40%'
                             }}
+                            type="tel"
                         />
+
 
 
 
