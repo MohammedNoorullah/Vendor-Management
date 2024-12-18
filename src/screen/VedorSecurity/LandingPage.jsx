@@ -12,7 +12,7 @@ import { unstable_HistoryRouter, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, handleToggle }) => {
+const LandingPage = ({ countryCode,securityCode, vendorCode, isVendorCode, handleChange, handleToggle }) => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false)
@@ -24,32 +24,6 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
     const [captchaValue, setCaptchaValue] = useState(generateCaptcha());
     const [errorMessage, setErrorMessage] = useState('');
 
-
-    const [currentUrl, setCurrentUrl] = useState('');
-
-    const [countryCode, setCountryCode] = useState('');
-
-    useEffect(() => {
-        // Get the full URL
-        // const url = window.location.href;
-
-        // Split the URL at '//' and then split the first part by '/'
-        // const extractedCountryCode = url.split('//')[1].split('/')[0];
-        // const extractedCountryCode = url.split('vendor')[0]
-        // const extractedCountryCode = url.slice(0, 2).toLowerCase();
-        const url = window.location.hostname;
-
-        const extractedCountryCode = url.slice(0, 2).toLowerCase();
-
-        if (extractedCountryCode === 'lo') {
-            setCountryCode('KC');
-        } else {
-            setCountryCode(extractedCountryCode);
-        }
-    }, []);
-
-    console.log('currentUrl', currentUrl)
-    console.log('countryCode', countryCode)
 
     function generateCaptcha(length = 6) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

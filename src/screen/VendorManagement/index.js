@@ -13,7 +13,7 @@ import { useRef } from 'react';
 
 const theme = createTheme();
 
-function VendorManagement({ securityCode, vendorCode }) {
+function VendorManagement({ countryCode, securityCode, vendorCode }) {
 
     const navigate = useNavigate();
 
@@ -469,7 +469,7 @@ function VendorManagement({ securityCode, vendorCode }) {
 
 
         if (userform?.fldId === 0) {
-            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${securityCode}`, userform, { headers })
+            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${countryCode + securityCode}`, userform, { headers })
                 .then((res) => {
                     let data = res.data;
                     console.log('Data:', data);
