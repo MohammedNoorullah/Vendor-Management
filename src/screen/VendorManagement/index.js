@@ -469,7 +469,7 @@ function VendorManagement({ securityCode, vendorCode }) {
 
 
         if (userform?.fldId === 0) {
-            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${'KR' + securityCode}`, userform, { headers })
+            axios.post(`${Config.baseUrl}/api/TblVendorManagement/CreateTblVendorManagement?sCompanyCode=${securityCode}`, userform, { headers })
                 .then((res) => {
                     let data = res.data;
                     console.log('Data:', data);
@@ -482,7 +482,7 @@ function VendorManagement({ securityCode, vendorCode }) {
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                navigate('/vendor/security');
+                                navigate('/');
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 500);
@@ -508,7 +508,7 @@ function VendorManagement({ securityCode, vendorCode }) {
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                navigate('/vendor/security');
+                                navigate('/');
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 500);

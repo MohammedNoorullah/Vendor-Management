@@ -42,7 +42,7 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
         const extractedCountryCode = url.slice(0, 2).toLowerCase();
 
         if (extractedCountryCode === 'lo') {
-            setCountryCode('KR');
+            setCountryCode('KC');
         } else {
             setCountryCode(extractedCountryCode);
         }
