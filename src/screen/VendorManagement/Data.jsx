@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/styles';
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Form, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { SelectGroup, TextInput, ValidationForm } from 'react-bootstrap4-form-validation';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Config from '../../config';
 import Cookies from 'js-cookie';
@@ -10,6 +11,7 @@ import axios from 'axios';
 import DropDownGrid from '../../App/component/DropDownGrid';
 import makeAnimated from 'react-select/animated';
 import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
 
 let apiCallId;
 
@@ -21,6 +23,9 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
     const [areaList, setAreaList] = useState([]);
     const [areaRequired, setAreaRequired] = useState(false);
     const [options, setOptions] = useState(null);
+    const [isVendorCodeVisible, setIsVendorCodeVisible] = useState(false);
+
+    const navigate = useNavigate();
 
     console.log('dashboardFilterList', dashboardFilterList)
     console.log('paymentTerms', paymentTerms);
@@ -304,12 +309,13 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                 />
                                             </Form.Group>
 
-                                            <Form.Group as={Col} md="6">
-                                                <Form.Label htmlFor="fldVendorCode">Vendor Code<span className="text-danger">*</span></Form.Label>
+                                            <Form.Group as={Col} md="6" style={{ display: isVendorCodeVisible ? 'block' : 'none' }}>
+                                                <Form.Label htmlFor="fldVendorCode">
+                                                    Vendor Code<span className="text-danger">*</span>
+                                                </Form.Label>
                                                 <TextInput
                                                     name="fldVendorCode"
                                                     id="fldVendorCode"
-                                                    // placeholder="Auto Generate"
                                                     required
                                                     autoComplete="off"
                                                     maxLength={50}
@@ -317,6 +323,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     onChange={handleChange}
                                                 />
                                             </Form.Group>
+
 
                                             {/* <Form.Group as={Col} md="6">
                                                 <Form.Label htmlFor="state">State<span className="text-danger">*</span></Form.Label>
@@ -671,11 +678,20 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                             </Col>
                         </Row>
 
-                        <Box sx={{ textAlign: 'right' }}>
-                            <Button type='submit' variant="primary" size="small">
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                            <Button onClick={(e) => { navigate('/vendor/security') }} variant="secondary">
+                                <ArrowBackIcon />
+                            </Button>
+                            <Button type="submit" variant="primary">
                                 <ArrowForwardIcon />
                             </Button>
                         </Box>
+
+                        {/* <Box sx={{ textAlign: 'right' }}>
+                            <Button type='submit' variant="primary" size="small">
+                                <ArrowForwardIcon />
+                            </Button>
+                        </Box> */}
 
                     </Box>
                 </Container>
