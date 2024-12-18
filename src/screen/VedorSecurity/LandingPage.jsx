@@ -36,8 +36,11 @@ const LandingPage = ({ securityCode, vendorCode, isVendorCode, handleChange, han
         // Split the URL at '//' and then split the first part by '/'
         const extractedCountryCode = url.split('//')[1].split('/')[0];
 
-        // Set the extracted country code to state
-        setCountryCode(extractedCountryCode);
+        if (extractedCountryCode === 'localhost:5000') {
+            setCountryCode('KR');
+        } else {
+            setCountryCode(extractedCountryCode);
+        }
     }, []);
 
     console.log('currentUrl', currentUrl)
