@@ -235,6 +235,17 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     fldAccountMailId: data.fldAccountMailId,
                 })
 
+                const capacities = data.fldVessalCapasity.split(',');
+                const vesselCounts = data.fldNoOfVessal.split(',');
+
+                const vessels = capacities.map((capacity, idx) => ({
+                    capacity,
+                    numberOfVessels: vesselCounts[idx] || '0', // Ensure it's not undefined
+                }));
+
+                // Update the vessel list and show the table
+                setVesselList(vessels);
+                setShowTable(true);
             })
             .catch((error) => {
                 console.error('Error:', error.response ? error.response.data : error.message);
@@ -357,10 +368,22 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
             });
 
             setShowTable(true);
+
         } else {
             alert('Please fill both fields');
         }
     }, [userform.fldVessalCapasity, userform.fldNoOfVessal]);
+
+    // useEffect(() => {
+    //     if (vesselList.length > 0) {
+    //         // Reset the form fields
+    //         setUserform((prev) => ({
+    //             ...prev,
+    //             fldVessalCapasity: '',
+    //             fldNoOfVessal: '',
+    //         }));
+    //     }
+    // }, [vesselList]);
 
 
 
