@@ -1,0 +1,63 @@
+/**  =====================
+      button css start
+==========================  **/
+.btn-page {
+    .btn {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+
+    .btn-group,
+    .btn-group-vertical {
+        .btn {
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+    }
+}
+
+.btn.btn-icon {
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-flat {}
+
+
+
+@media print {
+    @page {
+        size: portrait;
+    }
+}
+
+
+.btn-orange {
+    background-color: #F7CA18;
+    color:red
+}
+
+.light-blue {
+    background-color: #00bfff;
+}
+
+.btn-green {
+    background-color: #86b300;
+    // opacity: 0.5;
+}
+
+
+// .modal-content {
+//     width: 120% !important
+// }
+
+.line-break {
+    white-space: pre-line;
+    margin-left: 5px;
+  }

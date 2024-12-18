@@ -7,16 +7,19 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Config from '../../config';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import DropDownGrid from '../../App/component/DropDownGrid';
 import makeAnimated from 'react-select/animated';
 import Select from 'react-select';
 
-
 let apiCallId;
 
-function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, checkboxChecked, userform, nextStep }) {
+function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, checkboxChecked, userform, setUserform, nextStep }) {
     let [selectedList, setSelectedList] = useState('');
     const [dashboardFilterList, setDashboardFilterList] = useState([]);
     const [paymentTerms, setPaymentTerms] = useState([]);
+    const [areaMaster, setAreaMaster] = useState([]);
+    const [areaList, setAreaList] = useState([]);
+    const [areaRequired, setAreaRequired] = useState(false);
     const [options, setOptions] = useState(null);
 
     console.log('dashboardFilterList', dashboardFilterList)
@@ -42,6 +45,8 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
             });
     }, []);
 
+    console.log("AreaList", areaList);
+
     useEffect(() => {
         const headers = {
             'Access-Control-Allow-Origin': '*',
@@ -61,6 +66,43 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
             });
     }, []);
 
+    useEffect(() => {
+        const headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Content-Type': 'application/json',
+            dbname: Cookies.get('DATABASE')
+        };
+
+        axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetAreaMaster`, { headers })
+            .then((res) => {
+                const data = res.data;
+                console.log('area:', data);
+                setAreaMaster(data); // Assuming data is an array
+            })
+            .catch((error) => {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            });
+    }, []);
+
+    useEffect(() => {
+        if (areaMaster.length > 0) {
+            let data = [];
+            areaMaster.forEach((element) => {
+                data.push({
+                    fldId: element.fldId,
+                    country: element.fldCountry,
+                    state: element.fldState,
+                    city: element.fldCity,
+                    area: element.fldArea,
+                    pincode: element.fldPincode,
+                    fldStateCode: element.fldStateCode
+                });
+            });
+            setAreaList([...data]);
+
+        }
+    }, [areaMaster]);
 
 
     const propertyModal = (status) => {
@@ -78,6 +120,44 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                 break;
         }
     };
+
+    // const handleAreaChange = (e, type, name) => {
+    //     console.log("Valuesss", e)
+    //     if (type === 'select') {
+    //         if (name === 'fldFKArea') {
+    //             setAreaRequired(false);
+    //         }
+    //         let key = name;
+    //         let value = e;
+    //         console.log(e, 'selectedrow')
+    //         setUserform((prev) => ({
+    //             ...prev,
+    //             [key]: value
+    //         }));
+    //     }
+
+
+    // }
+
+    const handleAreaChange = (value, type, name) => {
+        console.log("Valuesss", value);
+        if (type === 'select') {
+            if (name === 'fldFKArea') {
+                let ind = areaList.findIndex((ele) => ele.fldId === value.fldId);
+                if (ind !== -1) {
+                    setUserform((prev) => ({
+                        ...prev,
+                        fldFKArea: value.fldId,
+                        fldArea: value.area,
+                        fldCity: value.city,
+                        fldState: value.state,
+                        fldPincode: value.pincode,
+                    }));
+                }
+            }
+        }
+    };
+
 
 
     return (
@@ -229,8 +309,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                 <TextInput
                                                     name="fldVendorCode"
                                                     id="fldVendorCode"
-                                                    placeholder="Auto Generate"
-                                                    disabled
+                                                    // placeholder="Auto Generate"
                                                     required
                                                     autoComplete="off"
                                                     maxLength={50}
@@ -302,17 +381,62 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                 <DropDownGrid
                                                     id="fldFKArea"
                                                     name="fldFKArea"
-                                                    disabled={buttonStatus === 'delete' && true}
                                                     value={userform?.fldFKArea}
-                                                    tableHeaderData={['area', 'city', 'pincode', 'state']}
-                                                    tableDataKeyName={['area', 'city', 'pincode', 'state']}
+                                                    tableHeaderData={['area', 'city', 'country', 'state', 'pincode']}
+                                                    tableDataKeyName={['area', 'city', 'country', 'state', 'pincode']}
                                                     isSimpleTable={true}
-                                                    tableBodyData={areaList}
-                                                    onChange={(e) => handleAreaChange(e, 'select', 'fldFKArea')}
+                                                    tableBodyData={areaList || []}
+                                                    //onChange={(e) => handleAreaChange(e, 'select', 'fldFKArea')}
+                                                    // onChange={(e) => handleAreaChange(e, 'fldFKArea')}
+                                                    onChange={(e) => {
+                                                        // selectedRow now contains the full row object
+                                                        console.log(e, 'selected row'); // Log the selected row object for debugging
+                                                        let ind = areaList.findIndex((ele) => ele.fldFKArea == e);
+                                                        // Extract necessary fields from selectedRow
+                                                        const selectedValue = e;
+                                                        const selectedDescription = areaList[ind].fldArea;
+                                                        const selectedCity = areaList[ind].fldCity;
+                                                        const selectedState = areaList[ind].fldState;
+                                                        const selectedPincode = areaList[ind].fldPincode;
+
+                                                        // Call handleAreaChange for each field
+                                                        handleAreaChange(selectedValue, 'select', 'fldFKArea'); // Save the full row object for fldFKArea
+                                                        handleAreaChange(selectedDescription, 'select', 'fldArea'); // Save the area description
+                                                        handleAreaChange(selectedState, 'select', 'fldState'); // Save the state
+                                                        handleAreaChange(selectedCity, 'select', 'fldCity'); // Save the city
+                                                        handleAreaChange(selectedPincode, 'select', 'fldPincode'); // Save the pincode
+                                                    }}
                                                     isMultipleSelection={false}
                                                 />
-                                                {areaRequired && <Row className="d-flex text-danger t-3">{`*Area is required`}</Row>}
+                                                {areaRequired && <Form.Row className="d-flex text-danger t-3">{`*Area is required`}</Form.Row>}
                                             </Form.Group> */}
+
+                                            <Form.Group as={Col} md="12">
+                                                <Form.Label htmlFor="fldFKArea">
+                                                    Area<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <DropDownGrid
+                                                    id="fldFKArea"
+                                                    name="fldFKArea"
+                                                    value={userform?.fldFKArea}
+                                                    tableHeaderData={['area', 'city', 'country', 'state', 'pincode']}
+                                                    tableDataKeyName={['area', 'city', 'country', 'state', 'pincode']}
+                                                    isSimpleTable={true}
+                                                    tableBodyData={areaList || []}
+                                                    onChange={(selectedValue) => {
+                                                        const selectedRow = areaList.find(row => row.fldId === selectedValue);
+                                                        if (selectedRow) {
+                                                            handleAreaChange(selectedRow, 'select', 'fldFKArea');
+                                                        } else {
+                                                            console.error('Selected row not found!');
+                                                        }
+                                                    }}
+                                                    isMultipleSelection={false}
+                                                />
+                                                {areaRequired && <Form.Row className="d-flex text-danger t-3">{`*Area is required`}</Form.Row>}
+                                            </Form.Group>
+
+
 
                                             <Form.Group as={Col} md="12">
                                                 <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*If you don't find your required information directly enter below*</span></Form.Label>
@@ -325,7 +449,6 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     id="fldArea"
                                                     placeholder="Area"
                                                     autoComplete="off"
-                                                    required
                                                     maxLength={100}
                                                     value={userform?.fldArea}
                                                     onChange={handleChange}
@@ -339,7 +462,6 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     id="fldCity"
                                                     placeholder="City"
                                                     autoComplete="off"
-                                                    required
                                                     maxLength={100}
                                                     value={userform?.fldCity}
                                                     onChange={handleChange}
@@ -354,7 +476,6 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     placeholder="Pincode"
                                                     autoComplete="off"
                                                     pattern="^[0-9]{0,15}$"
-                                                    required
                                                     maxLength={15}
                                                     errorMessage={{
                                                         pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
@@ -372,7 +493,6 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     id="fldState"
                                                     placeholder="State"
                                                     autoComplete="off"
-                                                    required
                                                     maxLength={100}
                                                     value={userform?.fldState}
                                                     onChange={handleChange}

@@ -1,0 +1,17 @@
+.table-responsive {
+    width: 100% !important;
+
+    .dataTables_wrapper {
+        width: 100% !important;
+        #table-user-header, #table-company-master, #table-unit-master, #table-party-master, #table-party-details, #table-size-measurement-master, #table-size-info, #table-size-ratio, #table-sales-order, #table-sales-order-Details, #table-price-mapping, #accessories-Usage-List {
+            overflow-x: auto !important;
+            width: 100% !important;
+            white-space: nowrap !important;
+            display: block !important;
+
+            tbody{
+                width: 100% !important;
+            }
+        }
+    }
+}

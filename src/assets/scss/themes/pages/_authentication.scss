@@ -1,0 +1,273 @@
+/**  =====================
+      Authentication css start
+==========================  **/
+.auth-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-width: 100%;
+    min-height: 100vh;
+    background: $primary-color;
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1140px;
+        }
+    }
+    @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        display: block;
+        margin: 0 auto;
+
+        > .row {
+            min-height: 100vh;
+
+            > .aut-bg-img {
+                min-height: 100vh;
+            }
+        }
+    }
+
+    .saprator {
+        position: relative;
+        margin: 8px 0;
+
+        span {
+            background: #fff;
+            position: relative;
+            padding: 0 10px;
+            z-index: 5;
+            font-size: 20px;
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: $theme-border;
+            z-index: 1;
+        }
+    }
+
+    a,
+    p > a {
+        color: $theme-heading-color;
+        font-weight: 600;
+    }
+
+    .input-group {
+        background: transparent;
+    }
+
+    .card {
+        margin-bottom: 0;
+        padding: 8px;
+
+        .card-body {
+            padding: 20px 25px 20px 40px;
+        }
+        @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            display: block;
+        }
+    }
+
+    > div {
+        z-index: 5;
+    }
+
+    .auth-content {
+        position: relative;
+        padding: 15px;
+        z-index: 5;
+
+        &:not(.container) {
+            width: 400px;
+
+            .card-body {
+                padding: 40px 35px;
+            }
+        }
+        @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            margin: 0 auto;
+        }
+    }
+
+    .auth-side-img {
+        padding-right: 400px;
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        @media only screen and (max-width: 991px) {
+            display: none;
+        }
+    }
+
+    .auth-side-form {
+        position: relative;
+        min-height: 100%;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        left: auto;
+        float: right;
+
+        > * {
+            position: relative;
+            z-index: 5;
+        }
+        @media only screen and (max-width: 991px) {
+            width: 100%;
+            justify-content: center;
+
+            .auth-content:not(.container) {
+                max-width: 350px;
+            }
+        }
+    }
+
+    &.aut-bg-img {
+        .auth-side-form {
+            @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                height: 100vh;
+            }
+        }
+    }
+    @media only screen and (max-width: 767px) {
+        .card {
+            .card-body {
+                padding: 30px 15px;
+            }
+        }
+    }
+
+    &.offline {
+        background-image: none;
+
+        h1 {
+            font-size: 87px;
+            font-weight: 700;
+        }
+
+        &:before {
+            display: none;
+        }
+    }
+
+    .card-body .carousel-indicators {
+        margin: 15px 0 10px;
+        bottom: 0;
+
+        li {
+            width: 50px;
+            background-color: transparentize($primary-color, 0.6);
+            border-radius: 5px;
+            height: 4px;
+
+            &.active {
+                background-color: $primary-color;
+            }
+        }
+    }
+
+    .img-logo-overlay {
+        position: absolute;
+        top: 40px;
+        left: 50px;
+    }
+}
+
+.c-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(130deg, #feedd3, #9dc9f6);
+}
+.form-box {
+    width: 380px;
+    height: 450px;
+
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.header-form {
+    margin-bottom: 15px;
+}
+button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.message {
+    display: flex;
+    justify-content: space-around;
+}
+.social {
+    display: flex;
+    justify-content: space-around;
+    padding: 30px;
+}
+
+.social i {
+    font-size: 35px;
+}
+
+.social i:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.c-input-group {
+    border-radius: 40px;
+    background: #fff;
+    padding: 12px;
+}
+
+.c-input {
+    border: 0px;
+    width: 73%;
+}
+
+.c-input:focus {
+    outline: none;
+}
+
+.c-input-group-text {
+    border-right: 2px solid grey;
+    padding-right: 10px;
+}
+.c-input-group-text-password {
+    border-left: 2px solid grey;
+    padding-left: 8px;
+}
+.c-color {
+    color: grey;
+}
+.c-button {
+    margin-top: 20px;
+    border-radius: 50px;
+    padding: 15px 50px;
+    font-size: 'larger';
+    font-weight: 'bolder';
+}
+
+/* image varient start */
+.aut-bg-img {
+    background-image: url("./../../../images/auth/img-auth-big.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+
+    .auth-content {
+        padding: 70px 40px;
+    }
+}
+/* image varient End */
+/**====== Authentication css end ======**/

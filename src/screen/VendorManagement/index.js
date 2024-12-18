@@ -19,6 +19,7 @@ function VendorManagement({ securityCode, vendorCode }) {
 
     let today = new Date();
     const [step, setStep] = useState(1);
+    const [areaRequired, setAreaRequired] = useState(false);
     const [userform, setUserform] = useState({
         fldId: 0,
         fldProgram: "",
@@ -99,6 +100,8 @@ function VendorManagement({ securityCode, vendorCode }) {
         fldAccountContactNo: "",
         fldAccountMailId: "",
     });
+
+    console.log('userform', userform)
 
     const [isPopupOpen, setIsPopupOpen] = useState(true);
     const [checkboxChecked, setCheckboxChecked] = useState(false);
@@ -186,7 +189,7 @@ function VendorManagement({ securityCode, vendorCode }) {
                     fldState: data.fldState,
                     fldAddress1: data.fldAddress1,
                     fldAddress2: data.fldAddress2,
-                    fldFKArea: 0,
+                    fldFKArea: data.fldFKArea,
                     fldArea: data.fldArea,
                     fldCity: data.fldCity,
                     fldPincode: data.fldPincode,
@@ -278,28 +281,48 @@ function VendorManagement({ securityCode, vendorCode }) {
 
 
     // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-
-    //     // Convert to number for specific fields
-    //     let updatedValue = value; // Default to the original value
-
-    //     // Check if the field should be treated as numeric
-    //     if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel' || name === 'fldNoOfVessal') {
-    //         updatedValue = value ? Number(value) : ''; // Convert to number or empty
+    //     // Ensure e.target is defined
+    //     if (!e.target) {
+    //         console.warn("e.target is undefined");
+    //         return;  // Exit early if e.target is not available
     //     }
 
-    //     setUserform(prevData => ({
-    //         ...prevData,
-    //         [name]: updatedValue,
+    //     const { name, value } = e.target;  // Now we can safely destructure
+
+    //     let updatedValue = value;
+
+    //     // Handle specific fields
+    //     if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel') {
+    //         updatedValue = value ? Number(value) : '';  // Convert to number or empty
+    //     }
+
+    //     if (name === 'fldFKArea') {
+    //         setAreaRequired(false);
+    //     }
+
+    //     // Update the form state with the new value
+    //     setUserform((prev) => ({
+    //         ...prev,
+    //         [name]: updatedValue
     //     }));
     // };
 
+
     const handleChange = (e) => {
+
+       
+
         const { name, value } = e.target;
         let updatedValue = value;
         if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel') {
             updatedValue = value ? Number(value) : ''; // Convert to number or empty
         }
+
+        if (name === 'fldFKArea') {
+            updatedValue = value ? Number(value) : '';
+            setAreaRequired(false);
+        }
+
         setUserform((prev) => ({
             ...prev,
             [name]: updatedValue
@@ -584,9 +607,11 @@ function VendorManagement({ securityCode, vendorCode }) {
                     handleCheckboxChange={handleCheckboxChange}
                     checkboxChecked={checkboxChecked}
                     userform={userform}
+                    setUserform={setUserform}
                     vendorCode={vendorCode}
                     handleErrorSubmit={handleErrorSubmit}
                     nextStep={nextStep}
+                    areaRequired={areaRequired}
                 />
             )}
             {step === 2 && (

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-// import '../../assets/scss/themes/pages/_drop-down-grid.scss';
+import '../../assets/scss/themes/pages/_drop-down-grid.scss';
 import DataGrid, {
     Paging,
     Scrolling,
