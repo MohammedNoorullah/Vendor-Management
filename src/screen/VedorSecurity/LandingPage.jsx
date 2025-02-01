@@ -12,7 +12,7 @@ import { unstable_HistoryRouter, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const LandingPage = ({ countryCode,securityCode, vendorCode, isVendorCode, handleChange, handleToggle }) => {
+const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, handleChange, handleToggle }) => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false)

@@ -50,8 +50,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/vendor/security" />} />
-        <Route path="/vendor/security" element={<LandingPage countryCode={countryCode} securityCode={securityCode} vendorCode={vendorCode} isVendorCode={isVendorCode} handleChange={handleChange} handleToggle={handleToggle} />} />
+        {/* <Route path="/" element={<Navigate to="/vendor/security" />} /> */}
+        <Route path="/" element={<LandingPage countryCode={countryCode} securityCode={securityCode} vendorCode={vendorCode} isVendorCode={isVendorCode} handleChange={handleChange} handleToggle={handleToggle} />} />
         <Route path="/vendorManagement" element={<VendorManagement countryCode={countryCode} securityCode={securityCode} vendorCode={vendorCode} />} />
       </Routes>
     </Router>
