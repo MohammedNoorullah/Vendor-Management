@@ -109,6 +109,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
     const [uploadId, setUploadId] = useState('')
     const [showTable, setShowTable] = useState(false);
     const [vesselList, setVesselList] = useState([]);
+    const [programRequired, setProgramRequired] = useState(false);
 
     console.log('vesselList', vesselList)
 
@@ -322,9 +323,10 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
     const handleChange = (e) => {
 
 
-
+        console.log('eeeee', e)
         const { name, value } = e.target;
         let updatedValue = value;
+        console.log("eeeee", updatedValue);
         if (name === 'fldFKAccType' || name === 'fldFKPaymentTerms' || name === 'fldNoOfMachine' || name === 'fldNoOfSampleVessel') {
             updatedValue = value ? Number(value) : ''; // Convert to number or empty
         }
@@ -334,11 +336,31 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
             setAreaRequired(false);
         }
 
+        // For react-select (with isMulti), e is an array of selected options
+        if (name === 'fldProgram') {
+            setProgramRequired(false);
+            updatedValue = e && e.length > 0 ? e.map((item) => item.value) : ''; // Map over selected options to get their values, or return an empty string if no selections
+        }
         setUserform((prev) => ({
             ...prev,
             [name]: updatedValue
         }));
     };
+
+    const handleProgramChange = (selectedOptions, fieldName) => {
+        const updatedValue = selectedOptions && selectedOptions.length > 0
+            ? selectedOptions.map((item) => item.value).join(', ')  // Join the selected values into a single string
+            : '';  // If no items are selected, set to an empty string
+
+        setAreaRequired(false);
+
+        setUserform((prev) => ({
+            ...prev,
+            [fieldName]: updatedValue  // Update the form state with the new string value
+        }));
+    };
+
+
 
     const handleAddClick = useCallback(() => {
         const { fldVessalCapasity, fldNoOfVessal } = userform;
@@ -497,12 +519,43 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     let data = res.data;
                     console.log('Data:', data);
 
+                    // if (isPopupOpen && data) {
+                    //     Swal.fire({
+                    //         icon: 'success',
+                    //         title: 'Vendor Created',
+                    //         // html: `Please note down your VENDOR CODE: <b>${data?.fldVendorCode}</b>`,
+                    //         confirmButtonText: 'OK'
+                    //     }).then((result) => {
+                    //         if (result.isConfirmed) {
+                    //             navigate('/');
+                    //             setTimeout(() => {
+                    //                 window.location.reload();
+                    //             }, 500);
+                    //         }
+                    //     });
+
+                    //     toast.success('Vendor created successfully!');
+
+                    // }
                     if (isPopupOpen && data) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Vendor Created',
-                            // html: `Please note down your VENDOR CODE: <b>${data?.fldVendorCode}</b>`,
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            didOpen: () => {
+                                // Apply inline styles directly to the popup element
+                                const popupElement = Swal.getPopup();  // Get the popup DOM element
+
+                                // Inline styles for the popup
+                                popupElement.style.width = '90%';  // Make it 90% width for smaller screens
+                                popupElement.style.maxWidth = '500px';  // Set a max-width for large screens
+                                popupElement.style.padding = '10px';  // Adjust padding
+
+                                // Optional: Apply specific styles for mobile devices
+                                if (window.innerWidth <= 600) {
+                                    popupElement.style.padding = '15px';  // Increase padding on mobile
+                                }
+                            },
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 navigate('/');
@@ -513,7 +566,6 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                         });
 
                         toast.success('Vendor created successfully!');
-
                     }
                     setUploadId(res.data.fldId)
                 })
@@ -635,6 +687,8 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     handleErrorSubmit={handleErrorSubmit}
                     nextStep={nextStep}
                     areaRequired={areaRequired}
+                    programRequired={programRequired}
+                    handleProgramChange={handleProgramChange}
                 />
             )}
             {step === 2 && (

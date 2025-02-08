@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 let apiCallId;
 
-function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, checkboxChecked, userform, setUserform, nextStep }) {
+function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, handleProgramChange, checkboxChecked, userform, setUserform, nextStep, programRequired }) {
     let [selectedList, setSelectedList] = useState('');
     const [dashboardFilterList, setDashboardFilterList] = useState([]);
     const [paymentTerms, setPaymentTerms] = useState([]);
@@ -23,12 +23,14 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
     const [areaList, setAreaList] = useState([]);
     const [areaRequired, setAreaRequired] = useState(false);
     const [options, setOptions] = useState(null);
+    const [programName, setProgramName] = useState(null);
     const [isVendorCodeVisible, setIsVendorCodeVisible] = useState(false);
 
     const navigate = useNavigate();
 
     console.log('dashboardFilterList', dashboardFilterList)
     console.log('paymentTerms', paymentTerms);
+    console.log('programName', programName)
 
 
     useEffect(() => {
@@ -110,21 +112,20 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
     }, [areaMaster]);
 
 
-    const propertyModal = (status) => {
-        // dispatch({ type: PROPERTY_MODAL_OPEN, id: componentId });
-        switch (status) {
-            case 'partyCategory':
-                setSelectedList('partyCategory');
-                apiCallId = 31;
-                break;
-            case 'programType':
-                setSelectedList('programType');
-                apiCallId = 23;
-                break;
-            default:
-                break;
-        }
-    };
+    useEffect(() => {
+        setProgramName(
+            dashboardFilterList.length > 0 &&
+            dashboardFilterList.map((data) => {
+                const parts = data.fldProgramName.split(/DC|PO/);
+                const programName = parts[0];
+                let obj = {};
+                obj['label'] = programName;
+                obj['value'] = programName;
+                // obj['id'] = data.fldId;
+                return obj;
+            })
+        );
+    }, [dashboardFilterList]);
 
     // const handleAreaChange = (e, type, name) => {
     //     console.log("Valuesss", e)
@@ -170,21 +171,27 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
             <ThemeProvider>
                 <Container
                     component="main"
-                    maxWidth="vw"
+                    maxWidth="false"
                     sx={{
                         background: 'linear-gradient(130deg, #feedd3, #9dc9f6)',
                         overflow: 'auto',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        height: '100%',
+                        height: '100vh',
                         margin: 0,
-                        padding: 3,
+                        padding: { xs: 2, sm: 3 }, // Adjust padding for different screen sizes
+                        width: '100%', // Ensure full width on mobile
+                        '@media (max-width: 600px)': {
+                            padding: 2, // Mobile-specific padding
+                            height: 'auto', // Adjust height on small screens
+                        },
                     }}
                 >
 
+
                     <CssBaseline />
-                    <Box style={{ width: '950px', margin: '0 auto', justifyContent: 'center', height: '100vh' }}>
+                    <Box style={{ width: '100%', maxWidth: '950px', margin: '0 auto', justifyContent: 'center', height: '100vh' }}>
                         <Typography component="h1" variant="h5"
                             sx={{
                                 mb: 2, textAlign: 'center',
@@ -198,7 +205,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                 <Card style={{ borderRadius: '15px' }}>
                                     <Card.Body>
                                         <Row className="d-flex align-items-center">
-                                            <Form.Group as={Col} md="6">
+                                            {/* <Form.Group as={Col} md="6">
                                                 <Form.Label htmlFor="fldProgram">Nature of job<span className="text-danger">*</span></Form.Label>
                                                 <Form.Group as={Col} md="9">
                                                     <select
@@ -224,50 +231,38 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
 
                                                     </select>
                                                 </Form.Group>
-                                            </Form.Group>
+                                            </Form.Group> */}
 
-                                            {/* <Form.Group as={Col} md="4"> */}
-                                            {/* <div className="d-flex justify-content-between align-items-center"> */}
-                                            {/* <Form.Label htmlFor="fldProgram">
-                                                        Nature of job<span className="text-danger">*</span>
-                                                    </Form.Label> */}
-                                            {/* {!loading && buttonStatus === 'create' && ( */}
-                                            {/* <OverlayTrigger
-                                                            className="tooltip"
-                                                            delay={{ hide: 450, show: 300 }}
-                                                            overlay={(props) => <Tooltip {...props}>Add Program Type</Tooltip>}
-                                                            placement="bottom"
-                                                        >
-                                                            <i
-                                                                onClick={() => {
-                                                                    propertyModal('programType');
-                                                                }}
-                                                                style={{ color: 'purple', cursor: 'pointer' }}
-                                                                className="feather icon-plus-circle font-weight-bold"
-                                                            />
-                                                        </OverlayTrigger> */}
-                                            {/* )} */}
-                                            {/* </div> */}
-
-                                            {/* <Select */}
-                                            {/* name="fldProgram"
-                                                    id="fldProgram" */}
-                                            {/* // isDisabled={buttonStatus === 'delete' || (buttonStatus === 'update' && true)}
-                                                    // isDisabled={buttonStatus === 'delete'} */}
-                                            {/* closeMenuOnSelect={false}
+                                            <Form.Group as={Col} md="6">
+                                                <Form.Label htmlFor="fldProgram">
+                                                    Nature Of Jobs
+                                                    <span class="badge badge-primary">
+                                                        {userform?.fldProgram && userform?.fldProgram.includes(',') ? userform?.fldProgram?.split(',').length : userform?.fldProgram?.length
+                                                            || userform?.fldProgram && userform?.fldProgram?.length}
+                                                    </span>
+                                                    <span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <Select
+                                                    name="fldProgram"
+                                                    id="fldProgram"
+                                                    closeMenuOnSelect={false}
                                                     components={makeAnimated}
                                                     value={
-                                                             userform?.fldProgram &&
-                                                            userform?.fldProgram.length > 0 &&
-                                                            options[options.map((i) => i.value).indexOf(userform?.fldProgram)]
-                                                    } */}
-                                            {/* // required={buttonStatus === 'Delete' && false}
+                                                        userform?.fldProgram &&
+                                                        userform?.fldProgram.length > 0 &&
+                                                        programName &&
+                                                        programName.length > 0 &&
+                                                        programName[programName.map((i) => i.value).indexOf(userform?.fldProgram)]
+                                                    }
+                                                    required={true}
                                                     // onClick={() => buttonStatus === 'update' && dispatch(fetchColorDetailsWithoutId())}
-                                                    // onChange={(e) => handleChange(e, 'fldProgram')}
-                                                    // isMulti
-                                                    // options={options} */}
-                                            {/* // /> */}
-                                            {/* // </Form.Group> */}
+                                                    onChange={(e) => handleProgramChange(e, 'fldProgram')}
+                                                    isMulti
+                                                    options={programName}
+                                                />
+                                                {programRequired && <Form.Row className="d-flex text-danger t-3">{`*Color is required`}</Form.Row>}
+
+                                            </Form.Group>
 
                                             <Form.Group as={Col} md="6">
                                                 <Form.Label htmlFor="fldReference">Reference<span className="text-danger">*</span></Form.Label>
@@ -365,8 +360,18 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="12">
-                                                <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*Do not enter Area / City / Pincode / State in the Address*</span></Form.Label>
+                                                <Form.Label
+                                                    htmlFor="fldVendorAddress"
+                                                    style={{
+                                                        fontSize: '0.7rem',
+                                                        fontWeight: 'normal',
+                                                        color: 'red',
+                                                    }}
+                                                >
+                                                    <span className="text-danger">*Do not enter Area / City / Pincode / State in the Address*</span>
+                                                </Form.Label>
                                             </Form.Group>
+
 
                                             <Form.Group as={Col} md="12">
                                                 <Form.Label htmlFor="fldAddress2">Address 2<span className="text-danger">*</span></Form.Label>
@@ -446,7 +451,15 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
 
 
                                             <Form.Group as={Col} md="12">
-                                                <Form.Label htmlFor="fldVendorAddress"><span className="text-danger">*If you don't find your required information directly enter below*</span></Form.Label>
+                                                <Form.Label
+                                                    htmlFor="fldVendorAddress"
+                                                    style={{
+                                                        fontSize: '0.7rem',
+                                                        fontWeight: 'normal',
+                                                        color: 'red',
+                                                    }}
+                                                >
+                                                    <span className="text-danger">*If you don't find your required information directly enter below*</span></Form.Label>
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="3">
@@ -562,14 +575,16 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
 
                                             <Form.Group as={Col} md="6">
                                                 <Form.Label htmlFor="fldContactEMailId" className="d-flex align-items-center">
-                                                    E-Mail <span className="text-danger">*</span> (for account purpose)
+                                                    <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'Highlight' }}>E-Mail(for account purpose)</span>
                                                     <Form.Check
                                                         type="checkbox"
-                                                        label="Same as E-Mail"
+                                                        // label="Same as E-Mail"
+                                                        style={{ fontSize: '12px', fontWeight: 'bold', color: 'Highlight' }}
                                                         checked={checkboxChecked}
                                                         onChange={handleCheckboxChange}
-                                                        className="ms-2" // Adds margin to the left for spacing
+                                                        className="ms-1" // Adds margin to the left for spacing
                                                     />
+                                                    <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'Highlight' }}>Same as E-Mail</span>
                                                 </Form.Label>
                                                 <TextInput
                                                     name="fldContactEMailId"

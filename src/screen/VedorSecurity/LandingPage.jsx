@@ -60,6 +60,7 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
     //     // recaptchaRef.current.reset();
     // };
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
@@ -86,6 +87,9 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
             captcha: formData.get('captcha')
         };
         if (captchaInput === captchaValue && securityCode) {
+
+            console.log('baseUrl', Config.baseUrl)
+
 
             axios
                 .post(`${Config.baseUrl}/api/CPAuthenticate/RegisterVendor?sCompanyCode=${countryCode + securityCode}`, cpData)
@@ -227,9 +231,17 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         {/* <LockOutlinedIcon /> */}
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        sx={{
+                            mb: 2, textAlign: 'center',
+                            fontWeight: 'bold'
+                        }}
+                    >
                         Vendor Management Security
                     </Typography>
+
                     {/* <Button
                         onClick={handleToggle}
                         variant="contained"
@@ -302,9 +314,12 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                                 backgroundColor: '#fff',
                                 borderRadius: 10,
                                 '& .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-                                    borderRadius: 10
+                                    borderRadius: 10,
                                 },
-                                minWidth: '40%'
+                                minWidth: '40%', // Default width for larger screens
+                                '@media (max-width: 600px)': {
+                                    minWidth: '80%', // Increase width on mobile screens
+                                },
                             }}
                             type="tel"
                         />
@@ -332,13 +347,43 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                                 backgroundColor: '#fff',
                                 borderRadius: 10,
                                 '& .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-                                    borderRadius: 10
+                                    borderRadius: 10,
                                 },
-                                minWidth: '40%'
+                                minWidth: '40%', // Default width for larger screens
+                                '@media (max-width: 600px)': {
+                                    minWidth: '80%', // Increase width on mobile screens
+                                },
                             }}
                         />
 
-                        <div
+                        <Box
+                            sx={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                margin: '10px 0',
+                                border: '1px solid #000',
+                                padding: '10px',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                justifyContent: 'flex-start', // Align items to the left
+                                alignItems: 'center', // Vertically center the items
+                                gap: 1, // Small gap between label and value
+                                width: 'auto', // Auto width to fit the content
+                                maxWidth: '90%', // Ensure it doesn't stretch too wide on large screens
+                                marginLeft: 'auto', // Horizontally center
+                                marginRight: 'auto', // Horizontally center
+                                '@media (max-width: 600px)': {
+                                    fontSize: '1.2rem', // Slightly smaller font on mobile
+                                    padding: '8px', // Reduce padding on mobile
+                                },
+                            }}
+                        >
+                            <span>Captcha:</span>
+                            <span>{captchaValue}</span>
+                        </Box>
+
+
+                        {/* <div
                             style={{
                                 fontSize: '24px',
                                 margin: '10px 0',
@@ -349,7 +394,7 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                             }}
                         >
                             Captcha : {captchaValue}
-                        </div>
+                        </div> */}
                         {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
 
                         <Grid2 sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -376,33 +421,56 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                                     justifyContent: 'center',
                                     gap: 2,
                                     marginBottom: 2,
-                                    width: '80%',        // Reduce the width to 80% (adjust as needed)
-                                    maxWidth: '600px',   // Optional: limit the maximum width to 600px
-                                    marginLeft: 'auto',  // Centers the box horizontally
+                                    width: '80%', // Reduce the width to 80% (adjust as needed)
+                                    maxWidth: '600px', // Optional: limit the maximum width to 600px
+                                    marginLeft: 'auto', // Centers the box horizontally
                                     marginRight: 'auto', // Centers the box horizontally
+                                    // For Mobile: Ensure all text is visible
+                                    '@media (max-width: 600px)': {
+                                        width: '100%', // Ensure it takes up the full width on mobile
+                                        padding: '0 10px', // Add padding to prevent text from being too close to the edges
+                                    },
                                 }}
                             >
-                                <Typography variant="body1">
-                                    <span style={{ color: 'red' }}>Note:</span> Before proceeding for entering vendor information,
-                                    first download the below documents, fill it, seal, sign and scan for uploading.
+                                <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
+                                    <span style={{ color: 'red' }}>Note:</span> Before proceeding with entering vendor information,
+                                    first download the below documents, fill them out, seal, sign, and scan for uploading.
                                 </Typography>
                             </Box>
+
                         </div>
 
 
-                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginBottom: 2 }}>
-                            <Typography variant="body1">
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                gap: 2,
+                                marginBottom: 2,
+                                flexDirection: 'column',  // Stack the links vertically for mobile
+                                width: '80%', // Ensure it's responsive with the proper width
+                                maxWidth: '600px', // Max width for larger screens
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
+                                // Mobile Responsiveness
+                                '@media (max-width: 600px)': {
+                                    width: '100%',  // On mobile, ensure it takes the full width
+                                    gap: 1, // Reduce space between the links on mobile
+                                },
+                            }}
+                        >
+                            <Typography variant="body1" sx={{ textAlign: 'center' }}>
                                 <a href="/MSME_Declaration_Form.docx" download="MSME_Declaration_Form.docx">
                                     Download MSME Declaration Form
                                 </a>
                             </Typography>
-                            <Typography variant="body1">
-                                {/* Change the file path to your .doc file */}
+                            <Typography variant="body1" sx={{ textAlign: 'center' }}>
                                 <a href="/TDS_TCS_Declaration_Form.docx" download="TDS_TCS_Declaration_Form.docx">
                                     Download TDS / TCS Declaration Form
                                 </a>
                             </Typography>
                         </Box>
+
 
 
 

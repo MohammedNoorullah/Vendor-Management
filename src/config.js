@@ -1,11 +1,17 @@
 // /eprov2/ui
 
 const Config = {
-  defaultPath: '/vendor/security',
+  defaultPath: '/',
   //defaultPath: '/bulk/dashboard',
   // basename: 'kr-creation',
   // localUrl
-  baseUrl: `${window?.location?.href?.split('#')[0].substring(0, window?.location?.href?.split('#')[0].length - 1)}/eprov2api`,
+  // baseUrl: `${window?.location?.href?.split('#')[0]
+  //   .substring(0, window?.location?.href?.split('#')[0].length - 1)
+  //   .replace('kcvendor.', '')}/eprotex/eprov2api`,
+  baseUrl: `${window?.location?.href?.split('#')[0]
+    .substring(0, window?.location?.href?.split('#')[0].length - 1)
+    .replace(window?.location?.href?.includes('kcvendor.') ? 'kcvendor.' : 'krvendor.', '')}/eprotex/eprov2api`,
+
   baseUrlForSampleData: `${window?.location?.href
     ?.split('#')[0]
     .substring(0, window?.location?.href?.split('#')[0].length - 1)}/samples/SamplePartyMasterData.xlsx`,
@@ -17,7 +23,7 @@ const Config = {
   // baseUrl: 'https://techamour.net/eprotex/eprov2api',
 
   //30 03 2023
- baseUrl: 'http://eprotex.shop/eprotex/eprov2api',
+  // baseUrl: 'http://eprotex.shop/eprotex/eprov2api',
 
   //baseUrl: 'https://eprotex.software/eprotex/eprov2api',
 
