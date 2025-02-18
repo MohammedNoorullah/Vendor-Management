@@ -24,6 +24,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
     const [areaRequired, setAreaRequired] = useState(false);
     const [options, setOptions] = useState(null);
     const [programName, setProgramName] = useState(null);
+    const [programName2, setProgramName2] = useState(null);
     const [isVendorCodeVisible, setIsVendorCodeVisible] = useState(false);
 
     const navigate = useNavigate();
@@ -126,6 +127,43 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
             })
         );
     }, [dashboardFilterList]);
+
+    useEffect(() => {
+        // Only proceed if fldProgram exists and is a non-empty string
+        if (userform?.fldProgram && userform.fldProgram.length > 0 && programName) {
+            // Split the fldProgram string into an array of trimmed items
+            const programArray = userform.fldProgram
+                .split(',')
+                .map(item => item.trim());  // Ensure we trim extra spaces
+
+            // Debug: Log programArray to verify it's being split correctly
+            console.log('programArray:', programArray);
+
+            // Filter programName based on the programArray values
+            const result = programName.filter(({ value }) => {
+                // Trim any extra spaces from the value in programName and programArray
+                const trimmedValue = value.trim();
+
+                // Debug: Log each comparison
+                console.log(`Comparing trimmed '${trimmedValue}' with programArray values:`, programArray);
+
+                // Check if the programName value exists in programArray after trimming both sides
+                const isMatch = programArray.includes(trimmedValue);
+
+                // Log the match status
+                console.log(`Is match for '${trimmedValue}': ${isMatch}`);
+                return isMatch;
+            });
+
+            // Set the filtered result to programName2
+            setProgramName2(result);
+
+            // Debug: Log the filtered result
+            console.log('Filtered result:', result);
+        }
+    }, [programName, userform?.fldProgram]);  // Trigger on changes to programName and fldProgram
+
+
 
     // const handleAreaChange = (e, type, name) => {
     //     console.log("Valuesss", e)
@@ -249,10 +287,10 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     components={makeAnimated}
                                                     value={
                                                         userform?.fldProgram &&
-                                                        userform?.fldProgram.length > 0 &&
-                                                        programName &&
-                                                        programName.length > 0 &&
-                                                        programName[programName.map((i) => i.value).indexOf(userform?.fldProgram)]
+                                                            userform?.fldProgram.length > 0 ? programName2 || [] :
+                                                            programName &&
+                                                            programName.length > 0 &&
+                                                            programName[programName.map((i) => i.value).indexOf(userform?.fldProgram)]
                                                     }
                                                     required={true}
                                                     // onClick={() => buttonStatus === 'update' && dispatch(fetchColorDetailsWithoutId())}
@@ -497,6 +535,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     autoComplete="off"
                                                     pattern="^[0-9]{0,15}$"
                                                     maxLength={15}
+                                                    required
                                                     errorMessage={{
                                                         pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
                                                     }}
