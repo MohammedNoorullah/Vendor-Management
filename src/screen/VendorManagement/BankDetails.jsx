@@ -230,10 +230,10 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     placeholder='Account Number'
                                                     required
                                                     autoComplete="off"
-                                                    pattern="^[0-9]{0,15}$"
-                                                    maxLength={50}
+                                                    pattern="^[0-9]{0,20}$"  // Only numeric values, 0 to 20 digits
+                                                    maxLength={20}  // Limit input to 20 digits
                                                     errorMessage={{
-                                                        pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
+                                                        pattern: 'Only numeric values are allowed, a maximum of 20 digits are allowed'
                                                     }}
                                                     value={userform?.fldAccountNo}
                                                     onChange={handleChange}
