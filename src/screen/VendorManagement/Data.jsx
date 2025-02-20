@@ -557,6 +557,19 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     onChange={handleChange}
                                                 />
                                             </Form.Group>
+
+                                            <Form.Group as={Col} md="12">
+                                                <Form.Label htmlFor="fldGMap">G-Map</Form.Label>
+                                                <TextInput
+                                                    name="fldGMap"
+                                                    id="fldGMap"
+                                                    placeholder="G-Map"
+                                                    autoComplete="off"
+                                                    maxLength={500}
+                                                    value={userform?.fldGMap}
+                                                    onChange={handleChange}
+                                                />
+                                            </Form.Group>
                                         </Row>
                                     </Card.Body>
                                 </Card>
@@ -732,34 +745,10 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                             </Col>
                         </Row>
 
-                        <Typography component="h2" variant="h6">G-Map Info</Typography>
-                        <Row>
-                            <Col xl={12} md={12}>
-                                <Card style={{ borderRadius: '15px' }}>
-                                    <Card.Body>
-                                        <Row className="d-flex align-items-center">
-                                            <Form.Group as={Col} md="12">
-                                                <Form.Label htmlFor="fldGMap">G-Map</Form.Label>
-                                                <TextInput
-                                                    name="fldGMap"
-                                                    id="fldGMap"
-                                                    placeholder="G-Map"
-                                                    autoComplete="off"
-                                                    maxLength={500}
-                                                    value={userform?.fldGMap}
-                                                    onChange={handleChange}
-                                                />
-                                            </Form.Group>
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                            <Button onClick={(e) => { navigate('/vendor/security') }} variant="secondary">
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+                            {/* <Button variant="secondary">
                                 <ArrowBackIcon />
-                            </Button>
+                            </Button> */}
                             <Button type="submit" variant="primary">
                                 <ArrowForwardIcon />
                             </Button>
