@@ -739,12 +739,11 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                     <Card.Body>
                                         <Row className="d-flex align-items-center">
                                             <Form.Group as={Col} md="12">
-                                                <Form.Label htmlFor="fldGMap">G-Map<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label htmlFor="fldGMap">G-Map</Form.Label>
                                                 <TextInput
                                                     name="fldGMap"
                                                     id="fldGMap"
                                                     placeholder="G-Map"
-                                                    required
                                                     autoComplete="off"
                                                     maxLength={500}
                                                     value={userform?.fldGMap}

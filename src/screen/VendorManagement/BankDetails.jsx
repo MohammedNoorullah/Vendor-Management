@@ -231,7 +231,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     required
                                                     autoComplete="off"
                                                     pattern="^[0-9]{0,15}$"
-                                                    maxLength={20}
+                                                    maxLength={50}
                                                     errorMessage={{
                                                         pattern: 'Only numeric values are allowed, maximum 15 digits are allowed'
                                                     }}
