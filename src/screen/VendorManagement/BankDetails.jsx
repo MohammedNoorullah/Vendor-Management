@@ -350,7 +350,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                 <input
                                                     ref={fileInputRefs.fldGSTFileName}
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept="image/*,application/pdf"
                                                     onChange={() => handleFileChange('fldGSTFileName')}
                                                 />
                                                 {imagePreviews.fldGSTFileName && imagePreviews.fldGSTFileName.previewUrl && (
@@ -407,7 +407,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                 <input
                                                     ref={fileInputRefs.fldPANFileName}
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept="image/*,application/pdf"
                                                     onChange={() => handleFileChange('fldPANFileName')}
                                                 />
                                                 {imagePreviews.fldPANFileName && imagePreviews.fldPANFileName.previewUrl && (
@@ -457,7 +457,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                 <input
                                                     ref={fileInputRefs.fldAadhaarFileName}
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept="image/*,application/pdf"
                                                     onChange={() => handleFileChange('fldAadhaarFileName')}
                                                 />
                                                 {imagePreviews.fldAadhaarFileName && imagePreviews.fldAadhaarFileName.previewUrl && (
@@ -506,7 +506,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     <input
                                                         ref={fileInputRefs.fldPassbookFileName}
                                                         type="file"
-                                                        accept="image/*"
+                                                        accept="image/*,application/pdf"
                                                         onChange={() => handleFileChange('fldPassbookFileName')}
                                                     />
                                                     {imagePreviews.fldPassbookFileName && imagePreviews.fldPassbookFileName.previewUrl && (
@@ -536,7 +536,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                 <input
                                                     ref={fileInputRefs.fldDeclarationOfMSME}
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept=".pdf, .doc, .docx"
                                                     onChange={() => handleFileChange('fldDeclarationOfMSME')}
                                                 />
                                                 {imagePreviews.fldDeclarationOfMSME && (

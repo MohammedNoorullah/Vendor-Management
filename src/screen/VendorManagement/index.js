@@ -412,20 +412,48 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
 
 
 
+    // const handleFileChange = (fieldName) => {
+    //     const file = fileInputRefs[fieldName].current.files[0]; // Get the first file selected for this field
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         const previewUrl = URL.createObjectURL(file);
+    //         reader.onload = (e) => {
+    //             setImagePreviews((prevState) => ({
+    //                 ...prevState,
+    //                 [fieldName]: { file, previewUrl: previewUrl }, // Update the specific field with file and preview
+    //             }));
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
+
     const handleFileChange = (fieldName) => {
         const file = fileInputRefs[fieldName].current.files[0]; // Get the first file selected for this field
         if (file) {
-            const reader = new FileReader();
-            const previewUrl = URL.createObjectURL(file);
-            reader.onload = (e) => {
+            // Check if the file is an image or PDF
+            const fileType = file.type.includes('image') ? 'image' : (file.type === 'application/pdf' ? 'pdf' : null);
+
+            if (fileType === 'image') {
+                // Handle image files by creating a preview using FileReader
+                const reader = new FileReader();
+                const previewUrl = URL.createObjectURL(file);
+                reader.onload = () => {
+                    setImagePreviews((prevState) => ({
+                        ...prevState,
+                        [fieldName]: { file, previewUrl, fileType }, // Store preview and file type
+                    }));
+                };
+                reader.readAsDataURL(file); // For images, this generates the base64 preview
+            } else if (fileType === 'pdf') {
+                // For PDF files, store the file and file name (no preview required)
                 setImagePreviews((prevState) => ({
                     ...prevState,
-                    [fieldName]: { file, previewUrl: previewUrl }, // Update the specific field with file and preview
+                    [fieldName]: { file, previewUrl: null, fileType }, // No preview for PDFs
                 }));
-            };
-            reader.readAsDataURL(file);
+            }
         }
     };
+
 
     // Handle file upload (sending the files to the server)
     const handleUpload = (fldId) => {
@@ -458,22 +486,6 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                 console.error('Error uploading images:', error);
             });
 
-        // axios.post(
-        //     `${Config.baseUrl}/api/TblVendorManagement/VendorDeclarationMSMEUpload?FldId=${fldId}`,
-        //     formData,
-        //     {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //             dbname: Cookies.get('DATABASE'),
-        //         },
-        //     }
-        // )
-        //     .then(response => {
-        //         console.log('Upload success:', response.data);
-        //     })
-        //     .catch(error => {
-        //         console.error('Error uploading images:', error);
-        //     });
     };
 
 
