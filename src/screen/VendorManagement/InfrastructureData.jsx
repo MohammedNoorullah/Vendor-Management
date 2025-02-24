@@ -55,7 +55,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                     <Box style={{ width: '950px', margin: '0 auto', justifyContent: 'center', height: '100vh' }}>
 
 
-                        {userform?.fldProgram === 'KNITTING ' && (
+                        {/* {userform?.fldProgram === 'KNITTING ' && ( */}
+                        {userform?.fldProgram?.includes('KNITTING ') && (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -131,7 +132,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                         )}
 
 
-                        {userform?.fldProgram === 'HEAT SETTING' ? (
+                        {/* {userform?.fldProgram === 'HEAT SETTING' ? ( */}
+                        {userform?.fldProgram?.includes('HEAT SETTING') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -178,7 +180,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'STENTER' ? (
+                        {/* {userform?.fldProgram === 'STENTER' ? ( */}
+                        {userform?.fldProgram?.includes('STENTER') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -225,7 +228,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'DYEING ' ? (
+                        {/* {userform?.fldProgram === 'DYEING ' ? ( */}
+                        {userform?.fldProgram?.includes('DYEING ') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -342,7 +346,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : null}
 
-                        {userform?.fldProgram === 'BLEACHING ' ? (
+                        {/* {userform?.fldProgram === 'BLEACHING ' ? ( */}
+                        {userform?.fldProgram?.includes('BLEACHING ') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -459,7 +464,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'WASHING ' ? (
+                        {/* {userform?.fldProgram === 'WASHING ' ? ( */}
+                        {userform?.fldProgram?.includes('WASHING ') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -548,7 +554,7 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'TUBULAR COMPACTING' ? (
+                        {userform?.fldProgram?.includes('TUBULAR COMPACTING') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
@@ -582,7 +588,8 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                             </>
                         ) : ('')}
 
-                        {userform?.fldProgram === 'STITCHING ' ? (
+                        {/* {userform?.fldProgram === 'STITCHING ' ? ( */}
+                        {userform?.fldProgram?.includes('STITCHING ') ? (
                             <>
                                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
                                     Machine Information
