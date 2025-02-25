@@ -158,7 +158,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                 const parts = data.fldProgramName.split(/DC|PO/);
                 const programName = parts[0];
                 let obj = {};
-                obj['label'] = programName;
+                obj['label'] = data.fldDisplayName;
                 obj['value'] = programName;
                 obj['id'] = data.fldId;
                 return obj;
