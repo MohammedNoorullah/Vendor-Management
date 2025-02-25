@@ -310,6 +310,11 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                             }}
                             autoComplete="off"
                             maxLength={10}
+                            onKeyPress={(e) => {
+                                if (e.key === ' ') {
+                                    e.preventDefault();
+                                }
+                            }}
                             sx={{
                                 backgroundColor: '#fff',
                                 borderRadius: 10,

@@ -22,6 +22,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
     const [areaRequired, setAreaRequired] = useState(false);
     const [userform, setUserform] = useState({
         fldId: 0,
+        fldFKProgram: 0,
         fldProgram: "",
         fldFKUser: 1,
         fldVendorName: "",
@@ -51,7 +52,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
         fldModifiedDt: today.toISOString(),
         fldDeletedBy: 0,
         fldDeletedDt: today.toISOString(),
-        fldFKState: 2,
+        fldFKState: 0,
         fldState: "",
         fldAddress1: "",
         fldAddress2: "",
@@ -158,8 +159,9 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                 console.log('Data:', data);
                 setUserform({
                     fldId: data.fldId,
+                    fldFKProgram: data.fldFKProgram,
                     fldProgram: data.fldProgram,
-                    fldFKUser: 2,
+                    fldFKUser: data.fldFKUser,
                     fldVendorName: data.fldVendorName,
                     fldVendorCode: data.fldVendorCode,
                     fldVendorAddress: data.fldVendorAddress,
@@ -187,7 +189,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     fldModifiedDt: today.toISOString(),
                     fldDeletedBy: 0,
                     fldDeletedDt: today.toISOString(),
-                    fldFKState: 2,
+                    fldFKState: data.fldFKState,
                     fldState: data.fldState,
                     fldAddress1: data.fldAddress1,
                     fldAddress2: data.fldAddress2,
@@ -350,15 +352,36 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
     };
 
     const handleProgramChange = (selectedOptions, fieldName) => {
+        console.log('selectedOptions', selectedOptions)
         const updatedValue = selectedOptions && selectedOptions.length > 0
             ? selectedOptions.map((item) => item.value).join(', ')  // Join the selected values into a single string
             : '';  // If no items are selected, set to an empty string
+
+        const fkProgramValue = selectedOptions && selectedOptions.length > 0
+            ? selectedOptions.map((item) => item.id).join(', ') : '';
 
         setAreaRequired(false);
 
         setUserform((prev) => ({
             ...prev,
-            [fieldName]: updatedValue  // Update the form state with the new string value
+            [fieldName]: updatedValue,
+            fldFKProgram: fkProgramValue
+        }));
+    };
+
+    const handleStateChange = (selectedOptions, fieldName) => {
+        console.log('selectedOptions', selectedOptions)
+
+        const updatedValue = selectedOptions ? selectedOptions.value : '';
+        const updatedId = selectedOptions ? selectedOptions.id : '';
+
+        console.log('updatedValue', updatedValue)
+
+
+        setUserform((prev) => ({
+            ...prev,
+            [fieldName]: updatedValue,
+            fldFKState: updatedId
         }));
     };
 
@@ -703,6 +726,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     areaRequired={areaRequired}
                     programRequired={programRequired}
                     handleProgramChange={handleProgramChange}
+                    handleStateChange={handleStateChange}
                 />
             )}
             {step === 2 && (

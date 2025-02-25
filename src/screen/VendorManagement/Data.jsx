@@ -15,13 +15,15 @@ import { useNavigate } from 'react-router-dom';
 
 let apiCallId;
 
-function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, handleProgramChange, checkboxChecked, userform, setUserform, nextStep, programRequired }) {
+function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChange, handleProgramChange, handleStateChange, checkboxChecked, userform, setUserform, nextStep, programRequired }) {
     let [selectedList, setSelectedList] = useState('');
     const [dashboardFilterList, setDashboardFilterList] = useState([]);
     const [paymentTerms, setPaymentTerms] = useState([]);
     const [areaMaster, setAreaMaster] = useState([]);
     const [areaList, setAreaList] = useState([]);
     const [areaRequired, setAreaRequired] = useState(false);
+    const [stateList, setStateList] = useState([]);
+    const [stateOption, setStateOption] = useState([]);
     const [options, setOptions] = useState(null);
     const [programName, setProgramName] = useState(null);
     const [programName2, setProgramName2] = useState(null);
@@ -32,6 +34,8 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
     console.log('dashboardFilterList', dashboardFilterList)
     console.log('paymentTerms', paymentTerms);
     console.log('programName', programName)
+    console.log('stateList', stateList)
+    console.log('stateOption', stateOption)
 
 
     useEffect(() => {
@@ -93,6 +97,26 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
             });
     }, []);
 
+
+    useEffect(() => {
+        const headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Content-Type': 'application/json',
+            dbname: Cookies.get('DATABASE')
+        };
+
+        axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetStateMaster`, { headers })
+            .then((res) => {
+                const data = res.data;
+                console.log('area:', data);
+                setStateList(data); // Assuming data is an array
+            })
+            .catch((error) => {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            });
+    }, []);
+
     useEffect(() => {
         if (areaMaster.length > 0) {
             let data = [];
@@ -114,6 +138,20 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
 
 
     useEffect(() => {
+        setStateOption(
+            stateList.length > 0 &&
+            stateList.map((data) => {
+                let obj = {};
+                obj['label'] = data?.fldStateName;
+                obj['value'] = data?.fldStateName;
+                obj['id'] = data.fldId;
+                return obj;
+            })
+        )
+    }, [stateList])
+
+
+    useEffect(() => {
         setProgramName(
             dashboardFilterList.length > 0 &&
             dashboardFilterList.map((data) => {
@@ -122,7 +160,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                 let obj = {};
                 obj['label'] = programName;
                 obj['value'] = programName;
-                // obj['id'] = data.fldId;
+                obj['id'] = data.fldId;
                 return obj;
             })
         );
@@ -194,7 +232,6 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                         fldFKArea: value.fldId,
                         fldArea: value.area,
                         fldCity: value.city,
-                        fldState: value.state,
                         fldPincode: value.pincode,
                     }));
                 }
@@ -293,12 +330,11 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                             programName[programName.map((i) => i.value).indexOf(userform?.fldProgram)]
                                                     }
                                                     required={true}
-                                                    // onClick={() => buttonStatus === 'update' && dispatch(fetchColorDetailsWithoutId())}
                                                     onChange={(e) => handleProgramChange(e, 'fldProgram')}
                                                     isMulti
                                                     options={programName}
                                                 />
-                                                {programRequired && <Form.Row className="d-flex text-danger t-3">{`*Color is required`}</Form.Row>}
+                                                {programRequired && <Form.Row className="d-flex text-danger t-3">{`*Job is required`}</Form.Row>}
 
                                             </Form.Group>
 
@@ -463,14 +499,14 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
 
                                             <Form.Group as={Col} md="12">
                                                 <Form.Label htmlFor="fldFKArea">
-                                                    Area<span className="text-danger">*</span>
+                                                    Area
                                                 </Form.Label>
                                                 <DropDownGrid
                                                     id="fldFKArea"
                                                     name="fldFKArea"
                                                     value={userform?.fldFKArea}
-                                                    tableHeaderData={['area', 'city', 'country', 'state', 'pincode']}
-                                                    tableDataKeyName={['area', 'city', 'country', 'state', 'pincode']}
+                                                    tableHeaderData={['area', 'city', 'country', 'pincode']}
+                                                    tableDataKeyName={['area', 'city', 'country', 'pincode']}
                                                     isSimpleTable={true}
                                                     tableBodyData={areaList || []}
                                                     onChange={(selectedValue) => {
@@ -545,7 +581,7 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                             </Form.Group>
 
 
-                                            <Form.Group as={Col} md="3">
+                                            {/* <Form.Group as={Col} md="3">
                                                 <Form.Label htmlFor="fldState">State</Form.Label>
                                                 <TextInput
                                                     name="fldState"
@@ -555,6 +591,26 @@ function Data({ vendorCode, handleErrorSubmit, handleChange, handleCheckboxChang
                                                     maxLength={100}
                                                     value={userform?.fldState}
                                                     onChange={handleChange}
+                                                />
+                                            </Form.Group> */}
+
+                                            <Form.Group as={Col} md="3">
+                                                <Form.Label htmlFor="fldState">State <span className="text-danger">*</span></Form.Label>
+                                                <Select
+                                                    name="fldState"
+                                                    id="fldState"
+                                                    closeMenuOnSelect={true}
+                                                    components={makeAnimated}
+                                                    value={
+                                                        // Check if stateOption is an array and find the matching option
+                                                        Array.isArray(stateOption) && userform?.fldState
+                                                            ? stateOption.find(option => option.value === userform?.fldState)
+                                                            : null // If no match or empty, set to null
+                                                    }
+                                                    onChange={(e) => handleStateChange(e, 'fldState')}
+                                                    options={stateOption}
+                                                    isClearable={true}
+                                                    required
                                                 />
                                             </Form.Group>
 
