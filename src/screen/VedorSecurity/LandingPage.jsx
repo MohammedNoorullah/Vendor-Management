@@ -301,7 +301,7 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                             required
                             fullWidth
                             id="securityCode"
-                            label="Phone No"
+                            label="Vendor Phone No"
                             name="securityCode"
                             value={securityCode}
                             onChange={(e) => {
