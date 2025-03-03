@@ -311,9 +311,15 @@ const LandingPage = ({ countryCode, securityCode, vendorCode, isVendorCode, hand
                             autoComplete="off"
                             maxLength={10}
                             onKeyPress={(e) => {
-                                if (e.key === ' ') {
-                                    e.preventDefault();
+                                // Prevent non-numeric input
+                                if (/\D/.test(e.key)) {  // If the key is not a digit
+                                    e.preventDefault();  // Block non-numeric input
                                 }
+                            }}
+                            onPaste={(e) => {
+                                const pastedValue = e.clipboardData.getData('text').replace(/\s/g, '').slice(0, 10);
+                                handleChange(e, pastedValue);
+                                e.preventDefault();
                             }}
                             sx={{
                                 backgroundColor: '#fff',
