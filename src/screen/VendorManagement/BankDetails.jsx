@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AiOutlineUpload, AiOutlineEye } from 'react-icons/ai';
@@ -14,7 +15,7 @@ import Cookies from 'js-cookie';
 
 const theme = createTheme();
 
-const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload, triggerFileInput, handleFileChange, fileInputRefs, error, setError, handleErrorSubmit }) => {
+const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload, triggerFileInput, handleFileChange, fileInputRefs, error, setError, handleErrorSubmit, vendorError }) => {
 
     console.log(userform, 'userform')
 
@@ -23,7 +24,10 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
     const [uploadImages, setUploadImages] = useState();
     // const [error, setError] = useState('');
     const [accTypeList, setAccTypeList] = useState([]);
-
+    const [apiData, setApiData] = useState(null);
+    const [GSTError, setGSTError] = useState('');
+    const [PANError, setPANError] = useState('');
+    const [AadharError, setAadharError] = useState('');
 
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -32,6 +36,12 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
     const [selectedFile, setSelectedFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(null);
+
+    const prevGSTNo = useRef('');
+
+    const updatedGST = userform?.fldPrevGSTNo === userform?.fldGSTNo
+    const updatedPAN = userform?.fldPrevPANNo === userform?.fldPANNo
+    const updatedAadhar = userform?.fldPrevAadharNumber === userform?.fldAadharNumber
 
 
     useEffect(() => {
@@ -52,6 +62,95 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                 console.error('Error:', error.response ? error.response.data : error.message);
             });
     }, []);
+
+
+    useEffect(() => {
+        if (updatedGST === false && userform?.fldGSTNo?.length === 15) {
+            const headers = {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Content-Type': 'application/json',
+                dbname: Cookies.get('DATABASE')
+            };
+
+            axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetGSTValidation?FldGSTNo=${userform?.fldGSTNo}`, { headers })
+                .then((response) => {
+                    const data = response.data;
+                    setApiData(data);
+                    setGSTError('');
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data) {
+                        const errorMessage = error.response.data[""]?.errors?.[0]?.errorMessage;
+                        if (errorMessage) {
+                            setGSTError(errorMessage);
+                        }
+                    } else {
+                        setGSTError('');
+                    }
+                });
+        }
+    }, [userform?.fldGSTNo]);
+
+    useEffect(() => {
+        if (updatedPAN === false && userform?.fldPANNo?.length === 10) {
+            const headers = {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Content-Type': 'application/json',
+                dbname: Cookies.get('DATABASE')
+            };
+
+            axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetPANValidation?FldPANNo=${userform?.fldPANNo}`, { headers })
+                .then((response) => {
+                    const data = response.data;
+                    console.log('Data:', data);
+                    setApiData(data);
+                    setPANError('');
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data) {
+                        const errorMessage = error.response.data[""]?.errors?.[0]?.errorMessage;
+                        if (errorMessage) {
+                            setPANError(errorMessage);
+                        }
+                    } else {
+                        setPANError('');
+                    }
+                });
+        }
+    }, [userform?.fldPANNo]);
+
+    useEffect(() => {
+        if (updatedAadhar === false && userform?.fldAadharNumber?.length === 12) {
+            const headers = {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Content-Type': 'application/json',
+                dbname: Cookies.get('DATABASE')
+            };
+
+            axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetAadharValidation?FldAadharNo=${userform?.fldAadharNumber}`, { headers })
+                .then((response) => {
+                    const data = response.data;
+                    console.log('Data:', data);
+                    setApiData(data);
+                    setAadharError('');
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data) {
+                        const errorMessage = error.response.data[""]?.errors?.[0]?.errorMessage;
+                        if (errorMessage) {
+                            setAadharError(errorMessage);
+                        }
+                    } else {
+                        setAadharError('');
+                    }
+                });
+        }
+    }, [userform?.fldAadharNumber]);
+
+
 
     const handleRadioChange = (event) => {
         setSelectedOption(event.target.value);
@@ -88,7 +187,18 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
 
     const handleFinalSubmit = (e) => {
         e.preventDefault();
-        nextStep();
+        if (GSTError !== '') {
+            toast.error('GST is already exits', { autoClose: 1500 })
+        }
+        else if (PANError !== '') {
+            toast.error('PAN is already exits', { autoClose: 1500 })
+        }
+        else if (AadharError !== '') {
+            toast.error('Aadhar is already exits', { autoClose: 1500 })
+        }
+        else {
+            nextStep();
+        }
 
     };
 
@@ -99,6 +209,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
     return (
         <ValidationForm onSubmit={handleFinalSubmit} onErrorSubmit={handleErrorSubmit}>
             <ThemeProvider theme={theme}>
+                <ToastContainer />
                 <Container
                     component="main"
                     maxWidth="vw"
@@ -326,7 +437,8 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     maxLength={15}
                                                     errorMessage={{
                                                         pattern: 'Only alphanumeric are allowed, and exactly 15 characters are required.',
-                                                        required: 'GST Number is required.'
+                                                        required: 'GST Number is required.',
+                                                        GSTError: GSTError
                                                     }}
                                                     value={userform?.fldGSTNo}
                                                     onChange={(e) => {
@@ -337,12 +449,14 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         }
                                                     }}
                                                 />
-                                                {/* {userform?.fldGSTNo && userform.fldGSTNo.length !== 15 && (
+                                                {GSTError && GSTError !== '' && (
                                                     <div className="text-danger">
-                                                        GST Number must be exactly 15 characters.
+                                                        {GSTError}
                                                     </div>
-                                                )} */}
+                                                )}
+
                                             </Form.Group>
+
 
                                             <Form.Group as={Col} md="4">
                                                 {/* GST File Input */}
@@ -367,7 +481,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                     <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>Attached</span>
                                                 )}
                                             </Form.Group>
-
+                                            {/* <span className='text-danger'>{GSTError}</span> */}
 
                                         </Row>
                                         <Row className="d-flex align-items-center">
@@ -391,15 +505,15 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         const { value } = e.target;
                                                         // Validate length
                                                         if (value.length <= 10) {
-                                                            handleChange(e); // Call your existing handleChange function
+                                                            handleChange(e);
                                                         }
                                                     }}
                                                 />
-                                                {/* {userform?.fldPANNo && userform.fldPANNo.length !== 15 && (
+                                                {PANError && PANError !== '' && (
                                                     <div className="text-danger">
-                                                        PAN Number must be exactly 15 characters.
+                                                        {PANError}
                                                     </div>
-                                                )} */}
+                                                )}
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="4">
@@ -450,6 +564,11 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                                                         }
                                                     }}
                                                 />
+                                                {AadharError && AadharError !== '' && (
+                                                    <div className="text-danger">
+                                                        {AadharError}
+                                                    </div>
+                                                )}
                                             </Form.Group>
 
                                             <Form.Group as={Col} md="4">

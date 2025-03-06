@@ -112,6 +112,8 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
     const [showTable, setShowTable] = useState(false);
     const [vesselList, setVesselList] = useState([]);
     const [programRequired, setProgramRequired] = useState(false);
+    const [vendorError, setVendorError] = useState('');
+    console.log('VendorError', vendorError)
 
     console.log('vesselList', vesselList)
 
@@ -176,8 +178,11 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     fldBranchName: data.fldBranchName,
                     fldIFSCCode: data.fldIFSCCode,
                     fldGSTNo: data.fldGSTNo,
+                    fldPrevGSTNo: data.fldGSTNo,
                     fldPANNo: data.fldPANNo,
+                    fldPrevPANNo: data.fldPANNo,
                     fldAadharNumber: data.fldAadharNumber,
+                    fldPrevAadharNumber: data.fldAadharNumber,
                     fldPassBookorCheque: data.fldPassBookorCheque,
                     fldProductionCapacityPerWeek: data.fldProductionCapacityPerWeek,
                     fldTeamStrength: data.fldTeamStrength,
@@ -251,9 +256,18 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                 // Update the vessel list and show the table
                 setVesselList(vessels);
                 setShowTable(true);
+                setVendorError('');
             })
             .catch((error) => {
-                console.error('Error:', error.response ? error.response.data : error.message);
+                if (error.response && error.response.data) {
+                    const errorMessage = error.response.data[""]?.errors?.[0]?.errorMessage;
+                    if (errorMessage) {
+                        setVendorError(errorMessage);
+                        console.log('VENDOR Validation Error:', errorMessage);
+                    }
+                } else {
+                    setVendorError('');
+                }
             });
     }, []);
 
@@ -742,6 +756,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     setError={setError}
                     userform={userform}
                     handleErrorSubmit={handleErrorSubmit}
+                    vendorError={vendorError}
                 />
             )}
             {step === 3 && (
