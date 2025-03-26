@@ -101,6 +101,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
         fldAccountContactNo: "",
         fldAccountMailId: "",
         fldGMap: '',
+        fldPurpose: '',
     });
 
     console.log('userform', userform)
@@ -243,6 +244,7 @@ function VendorManagement({ countryCode, securityCode, vendorCode }) {
                     fldAccountContactNo: data.fldAccountContactNo,
                     fldAccountMailId: data.fldAccountMailId,
                     fldGMap: data.fldGMap,
+                    fldPurpose: data.fldPurpose,
                 })
 
                 const capacities = data.fldVessalCapasity.split(',');

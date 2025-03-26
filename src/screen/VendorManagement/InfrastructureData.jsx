@@ -715,9 +715,24 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                                                     onChange={handleChange}
                                                 />
                                             </Form.Group>
+
+                                            <Form.Group as={Col} md="15" controlId="fldPurpose">
+                                                <Form.Label>
+                                                    Purpose<span className="text-danger">*</span>
+                                                </Form.Label>
+                                                <Form.Control
+                                                    as="textarea"
+                                                    name="fldPurpose"
+                                                    id="fldPurpose"
+                                                    placeholder="Enter Purpose"
+                                                    // maxLength={1000}
+                                                    value={userform?.fldPurpose}
+                                                    onChange={handleChange}
+                                                    autoComplete="off"
+                                                    style={{ minHeight: '100px', resize: 'vertical' }} // Makes the textarea resizable and sets the minimum height
+                                                />
+                                            </Form.Group>
                                         </Row>
-
-
                                     </Card.Body>
                                 </Card>
                             </Col>
