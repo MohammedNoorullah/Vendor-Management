@@ -716,15 +716,16 @@ const InfrastructureData = ({ handleErrorSubmit, handleChange, userform, prevSte
                                                 />
                                             </Form.Group>
 
-                                            <Form.Group as={Col} md="15" controlId="fldPurpose">
+                                            <Form.Group as={Col} md="15">
                                                 <Form.Label>
                                                     Purpose<span className="text-danger">*</span>
                                                 </Form.Label>
-                                                <Form.Control
+                                                <TextInput
                                                     as="textarea"
                                                     name="fldPurpose"
                                                     id="fldPurpose"
                                                     placeholder="Enter Purpose"
+                                                    required
                                                     // maxLength={1000}
                                                     value={userform?.fldPurpose}
                                                     onChange={handleChange}
