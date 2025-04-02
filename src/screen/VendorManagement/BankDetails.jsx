@@ -12,6 +12,7 @@ import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import axios from 'axios';
 import Config from '../../config';
 import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 const theme = createTheme();
 
@@ -28,7 +29,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
     const [GSTError, setGSTError] = useState('');
     const [PANError, setPANError] = useState('');
     const [AadharError, setAadharError] = useState('');
-
+    const [isPopupOpen, setIsPopupOpen] = useState(true);
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [selectedOption, setSelectedOption] = useState('');
@@ -187,8 +188,39 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
 
     const handleFinalSubmit = (e) => {
         e.preventDefault();
-        if (GSTError !== '') {
-            toast.error('GST is already exits', { autoClose: 1500 })
+        // if (GSTError !== '') {
+        //     toast.error('GST is already exits', { autoClose: 1500 })
+        // }
+        if (isPopupOpen && GSTError !== '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'GST Already Exists',
+                text: 'Do you want to Countinue?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                didOpen: () => {
+                    // Apply inline styles directly to the popup element
+                    const popupElement = Swal.getPopup();  // Get the popup DOM element
+
+                    // Inline styles for the popup
+                    popupElement.style.width = '90%';  // Make it 90% width for smaller screens
+                    popupElement.style.maxWidth = '500px';  // Set a max-width for large screens
+                    popupElement.style.padding = '10px';  // Adjust padding
+
+                    // Optional: Apply specific styles for mobile devices
+                    if (window.innerWidth <= 600) {
+                        popupElement.style.padding = '15px';  // Increase padding on mobile
+                    }
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log('result', result)
+                    nextStep();
+                }
+            });
+
+            toast.error('GST Already Exists');
         }
         else if (PANError !== '') {
             toast.error('PAN is already exits', { autoClose: 1500 })
