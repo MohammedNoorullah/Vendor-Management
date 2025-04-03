@@ -40,6 +40,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
 
     const prevGSTNo = useRef('');
 
+
     const updatedGST = userform?.fldPrevGSTNo === userform?.fldGSTNo
     const updatedPAN = userform?.fldPrevPANNo === userform?.fldPANNo
     const updatedAadhar = userform?.fldPrevAadharNumber === userform?.fldAadharNumber
@@ -74,7 +75,7 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
                 dbname: Cookies.get('DATABASE')
             };
 
-            axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetGSTValidation?FldGSTNo=${userform?.fldGSTNo}`, { headers })
+            axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetGSTValidation?FldGSTNo=${userform?.fldGSTNo}&FldSuppName=${userform?.fldVendorName}`, { headers })
                 .then((response) => {
                     const data = response.data;
                     setApiData(data);
@@ -105,7 +106,6 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
             axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetPANValidation?FldPANNo=${userform?.fldPANNo}`, { headers })
                 .then((response) => {
                     const data = response.data;
-                    console.log('Data:', data);
                     setApiData(data);
                     setPANError('');
                 })
@@ -134,7 +134,6 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
             axios.get(`${Config.baseUrl}/api/TblVendorManagement/GetAadharValidation?FldAadharNo=${userform?.fldAadharNumber}`, { headers })
                 .then((response) => {
                     const data = response.data;
-                    console.log('Data:', data);
                     setApiData(data);
                     setAadharError('');
                 })
@@ -188,10 +187,10 @@ const BankDetails = ({ nextStep, prevStep, userform, handleChange, handleUpload,
 
     const handleFinalSubmit = (e) => {
         e.preventDefault();
-        // if (GSTError !== '') {
-        //     toast.error('GST is already exits', { autoClose: 1500 })
-        // }
-        if (isPopupOpen && GSTError !== '') {
+        if (GSTError === "GSTAndVendor Already Exists") {
+            toast.error('GST and Vendor is already exits', { autoClose: 1500 })
+        }
+        else if (isPopupOpen && GSTError === 'GST Already Exists') {
             Swal.fire({
                 icon: 'warning',
                 title: 'GST Already Exists',
