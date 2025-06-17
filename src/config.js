@@ -1,20 +1,38 @@
 // /eprov2/ui
 
+// const Config = {
+//   defaultPath: '/',
+//   //defaultPath: '/bulk/dashboard',
+//   // basename: 'kr-creation',
+//   // localUrl
+//   // baseUrl: `${window?.location?.href?.split('#')[0]
+//   //   .substring(0, window?.location?.href?.split('#')[0].length - 1)
+//   //   .replace('kcvendor.', '')}/eprotex/eprov2api`,
+//   baseUrl: `${window?.location?.href?.split('#')[0]
+//     .substring(0, window?.location?.href?.split('#')[0].length - 1)
+//     // .replace(window?.location?.href?.includes('kcvendor.') ? 'kcvendor.' : 'krvendor.', '')}/eprotex/eprov2api`,
+//     .replace(
+//       window?.location?.href?.includes('kcvendor.') ? 'kcvendor.' :
+//         window?.location?.href?.includes('krvendor.') ? 'krvendor.' :
+//           window?.location?.href?.includes('ofvendor.') ? 'ofvendor.' : '',
+//       ''
+//     )}/eprotex/eprov2api`,
+
+//   baseUrlForSampleData: `${window?.location?.href
+//     ?.split('#')[0]
+//     .substring(0, window?.location?.href?.split('#')[0].length - 1)}/samples/SamplePartyMasterData.xlsx`,
+const baseHost = window?.location?.hostname.replace(/^[^.]+?\./, ''); // Removes the first subdomain
+const protocol = window?.location?.protocol;
+const baseUrl = `${protocol}//${baseHost}/eprotex/eprov2api`;
+
+// console.log('protocol', protocol);
+// console.log('protocol', baseHost);
+
 const Config = {
   defaultPath: '/',
-  //defaultPath: '/bulk/dashboard',
-  // basename: 'kr-creation',
-  // localUrl
-  // baseUrl: `${window?.location?.href?.split('#')[0]
-  //   .substring(0, window?.location?.href?.split('#')[0].length - 1)
-  //   .replace('kcvendor.', '')}/eprotex/eprov2api`,
-  baseUrl: `${window?.location?.href?.split('#')[0]
-    .substring(0, window?.location?.href?.split('#')[0].length - 1)
-    .replace(window?.location?.href?.includes('kcvendor.') ? 'kcvendor.' : 'krvendor.', '')}/eprotex/eprov2api`,
+  baseUrl,
 
-  baseUrlForSampleData: `${window?.location?.href
-    ?.split('#')[0]
-    .substring(0, window?.location?.href?.split('#')[0].length - 1)}/samples/SamplePartyMasterData.xlsx`,
+  baseUrlForSampleData: `${protocol}//${baseHost}/samples/SamplePartyMasterData.xlsx`,
   // baseUrl: `${window?.location?.href?.split('#')[0].substring(0, window?.location?.href?.split('#')[0].length - 1)}/eprov2api`,
   // baseUrlForSampleData: `${window?.location?.href
   //     ?.split('#')[0]
